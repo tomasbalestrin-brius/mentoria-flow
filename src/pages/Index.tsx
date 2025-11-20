@@ -664,39 +664,41 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <FormHeader />
       
-      <div className="max-w-xl mx-auto px-5 md:px-4 pb-12">
-        <div className="min-h-[60vh]">
-          {renderStep()}
-        </div>
-        
-        {error && (
-          <div className="mt-6 p-3 bg-destructive/20 border border-destructive rounded-lg">
-            <p className="text-destructive text-sm text-center">{error}</p>
+      <div className="w-full flex justify-center px-5 md:px-4 pb-12">
+        <div className="w-full max-w-[90%] md:max-w-xl">
+          <div className="min-h-[60vh]">
+            {renderStep()}
           </div>
-        )}
-        
-        {step < 12 && (
-          <div className="flex justify-between items-center mt-8">
-            {step > 1 ? (
+          
+          {error && (
+            <div className="mt-6 p-3 bg-destructive/20 border border-destructive rounded-lg">
+              <p className="text-destructive text-sm text-center">{error}</p>
+            </div>
+          )}
+          
+          {step < 12 && (
+            <div className="flex justify-between items-center mt-8">
+              {step > 1 ? (
+                <button
+                  onClick={handleBack}
+                  className="text-muted-foreground hover:text-foreground transition"
+                >
+                  Voltar
+                </button>
+              ) : (
+                <div />
+              )}
+              
               <button
-                onClick={handleBack}
-                className="text-muted-foreground hover:text-foreground transition"
+                onClick={handleNext}
+                disabled={isSubmitting}
+                className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Voltar
+                {step === 11 ? (isSubmitting ? 'Confirmando...' : 'Confirmar Agendamento') : 'Continuar'}
               </button>
-            ) : (
-              <div />
-            )}
-            
-            <button
-              onClick={handleNext}
-              disabled={isSubmitting}
-              className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {step === 11 ? (isSubmitting ? 'Confirmando...' : 'Confirmar Agendamento') : 'Continuar'}
-            </button>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
