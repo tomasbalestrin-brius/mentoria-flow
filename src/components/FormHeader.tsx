@@ -4,7 +4,7 @@ export const FormHeader = () => {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <img 
-            src="/Logo_Bethel_branco.svg" 
+            src="/Logo_Bethel_branco.png" 
             alt="Bethel Educação" 
             className="h-10 object-contain"
           />
