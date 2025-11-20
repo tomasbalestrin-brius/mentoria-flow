@@ -22,7 +22,23 @@ export const getNextWorkingDays = (count: number): Date[] => {
 };
 
 export const formatDateForDisplay = (date: Date): string => {
-  return format(date, "EEEE, d 'de' MMMM", { locale: ptBR });
+  const today = new Date();
+  const tomorrow = addDays(today, 1);
+  
+  const dayName = format(date, "EEEE", { locale: ptBR });
+  const formattedDate = format(date, "d 'de' MMMM", { locale: ptBR });
+  
+  // Check if it's today
+  if (formatDateForDB(date) === formatDateForDB(today)) {
+    return `${dayName}, ${formattedDate} (hoje)`;
+  }
+  
+  // Check if it's tomorrow
+  if (formatDateForDB(date) === formatDateForDB(tomorrow)) {
+    return `${dayName}, ${formattedDate} (amanhã)`;
+  }
+  
+  return `${dayName}, ${formattedDate}`;
 };
 
 export const formatDateForDB = (date: Date): string => {

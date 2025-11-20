@@ -31,21 +31,71 @@ const Index = () => {
   const [availableDates, setAvailableDates] = useState<Date[]>([]);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [datesWithTimes, setDatesWithTimes] = useState<Map<string, string[]>>(new Map());
   
   const { saveProgress, completeForm } = useFormPersistence();
 
   useEffect(() => {
-    // Gerar hoje + próximos 2 dias úteis (total 3 dias)
-    const dates = getNextWorkingDays(3);
-    setAvailableDates(dates);
+    // Gerar hoje + próximos 4 dias úteis e filtrar apenas os que têm horários
+    const fetchDatesWithAvailability = async () => {
+      const dates = getNextWorkingDays(5);
+      const datesMap = new Map<string, string[]>();
+      const validDates: Date[] = [];
+      
+      for (const date of dates) {
+        const dateStr = formatDateForDB(date);
+        try {
+          // Buscar horários ocupados
+          const { data: sheetData, error: sheetError } = await supabase.functions.invoke('get-booked-times', {
+            body: {
+              date: dateStr,
+              spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
+            }
+          });
+
+          let bookedTimes: string[] = [];
+          if (sheetError) {
+            // Fallback para Supabase
+            const { data: supabaseData } = await supabase
+              .from('agendamentos')
+              .select('horario_agendamento')
+              .eq('data_agendamento', dateStr);
+            bookedTimes = supabaseData?.map(a => a.horario_agendamento) || [];
+          } else {
+            bookedTimes = sheetData?.bookedTimes || [];
+          }
+          
+          const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, date);
+          
+          // Apenas adicionar datas que tenham horários disponíveis
+          if (filtered.length > 0) {
+            datesMap.set(dateStr, filtered);
+            validDates.push(date);
+          }
+        } catch (error) {
+          console.error('Error checking availability for date:', dateStr, error);
+        }
+      }
+      
+      setDatesWithTimes(datesMap);
+      setAvailableDates(validDates);
+    };
+    
+    fetchDatesWithAvailability();
   }, []);
 
   useEffect(() => {
     // Buscar horários disponíveis quando uma data for selecionada
     if (formData.data_agendamento) {
-      fetchAvailableTimes(formData.data_agendamento);
+      // Usar horários do cache se disponível
+      const cachedTimes = datesWithTimes.get(formData.data_agendamento);
+      if (cachedTimes) {
+        setAvailableTimes(cachedTimes);
+      } else {
+        fetchAvailableTimes(formData.data_agendamento);
+      }
     }
-  }, [formData.data_agendamento]);
+  }, [formData.data_agendamento, datesWithTimes]);
 
   const fetchAvailableTimes = async (date: string) => {
     try {
@@ -234,7 +284,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <p className="text-sm md:text-lg text-muted-foreground">
-            Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil
+            Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil.
           </p>
           <div>
             <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Qual é o seu nome completo?</h2>
@@ -477,7 +527,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">O investimento para participar dos nossos programas é de R$ 9.997 a R$ 100k</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">O investimento para participar dos nossos programas é de R$ 9.997,00 à R$ 100.000,00</h2>
             <p className="text-[13px] md:text-lg text-gray-300 mb-6">Gostaria de seguir com o processo seletivo?</p>
             <div className="space-y-3">
               {investimentos.map((investimento) => (
@@ -512,8 +562,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">Escolha a data da sua call</h2>
-            <p className="text-[13px] md:text-lg text-gray-300 mb-6">Selecione o melhor dia para conversar com um especialista</p>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Ultimo passo, Entrevista com um de nossos especialistas para validação do seu perfil. Escolha o melhor dia e hora (horário de Brasília):</h2>
             <div className="space-y-3">
               {availableDates.map((date) => {
                 const dateStr = formatDateForDB(date);
@@ -556,8 +605,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">Escolha o horário</h2>
-            <p className="text-[13px] md:text-lg text-gray-300 mb-6 capitalize">Horários disponíveis para {displayDate}</p>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Escolha o horário</h2>
             {availableTimes.length === 0 ? (
               <div className="p-4 md:p-6 bg-destructive/10 border border-destructive rounded-lg">
                 <p className="text-destructive text-sm md:text-base">
