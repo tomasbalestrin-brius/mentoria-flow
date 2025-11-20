@@ -6,9 +6,9 @@ export const FormHeader = () => {
           <img 
             src="/Logo_Bethel_branco.png" 
             alt="Bethel Educação" 
-            className="h-14 object-contain"
+            className="h-8 md:h-14 object-contain"
           />
-          <span className="text-white font-semibold text-lg">Cleiton Querobin</span>
+          <span className="text-white font-semibold text-sm md:text-lg">Cleiton Querobin</span>
         </div>
         <div 
           className="w-full h-px"

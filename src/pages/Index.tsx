@@ -233,11 +233,11 @@ const Index = () => {
     if (step === 1) {
       return (
         <div className="space-y-6">
-          <p className="text-base md:text-lg text-muted-foreground">
+          <p className="text-sm md:text-lg text-muted-foreground">
             Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil
           </p>
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-4">Qual é o seu nome completo?</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-white mb-4">Qual é o seu nome completo?</h2>
             <input
               type="text"
               value={formData.nome}
@@ -256,8 +256,8 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Qual é o seu telefone?</h2>
-            <p className="text-base md:text-lg text-gray-300 mb-4">Inclua o DDD</p>
+            <h2 className="text-lg md:text-2xl font-bold text-white mb-2">Qual é o seu telefone?</h2>
+            <p className="text-sm md:text-lg text-gray-300 mb-4">Inclua o DDD</p>
             <div className="flex gap-2">
               <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
                 +55
@@ -281,7 +281,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-4">Qual é o seu e-mail?</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-white mb-4">Qual é o seu e-mail?</h2>
             <input
               type="email"
               value={formData.email}
@@ -300,7 +300,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-4">Qual é o seu Instagram?</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-white mb-4">Qual é o seu Instagram?</h2>
             <div className="flex gap-2">
               <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
                 @
@@ -324,7 +324,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-4">Qual é o seu nicho de atuação?</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-white mb-4">Qual é o seu nicho de atuação?</h2>
             <input
               type="text"
               value={formData.nicho}
@@ -344,7 +344,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
+            <h2 className="text-lg md:text-2xl font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
             <div className="space-y-3">
               {cargos.map((cargo) => (
                 <label
@@ -681,7 +681,7 @@ const Index = () => {
               {step > 1 ? (
                 <button
                   onClick={handleBack}
-                  className="text-muted-foreground hover:text-foreground transition"
+                  className="text-muted-foreground hover:text-foreground transition text-sm md:text-base"
                 >
                   Voltar
                 </button>
@@ -692,7 +692,7 @@ const Index = () => {
               <button
                 onClick={handleNext}
                 disabled={isSubmitting}
-                className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-5 md:px-8 py-2 md:py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
               >
                 {step === 11 ? (isSubmitting ? 'Confirmando...' : 'Confirmar Agendamento') : 'Continuar'}
               </button>
