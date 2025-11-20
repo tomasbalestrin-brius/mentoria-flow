@@ -1,11 +1,660 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from 'react';
+import { FormHeader } from '@/components/FormHeader';
+import { useFormPersistence, FormData } from '@/hooks/useFormPersistence';
+import { supabase } from '@/integrations/supabase/client';
+import { 
+  getNextWorkingDays, 
+  formatDateForDisplay, 
+  formatDateForDB,
+  AVAILABLE_TIMES,
+  filterAvailableTimes 
+} from '@/lib/dateUtils';
+import { toast } from 'sonner';
 
 const Index = () => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState<FormData>({
+    nome: '',
+    telefone: '',
+    email: '',
+    instagram: '',
+    nicho: '',
+    cargo: '',
+    faturamento: '',
+    dificuldade: '',
+    outraDificuldade: '',
+    investimento: '',
+    dataAgendamento: '',
+    horarioAgendamento: '',
+  });
+  const [error, setError] = useState('');
+  const [availableDates, setAvailableDates] = useState<Date[]>([]);
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const { saveProgress, completeForm } = useFormPersistence();
+
+  useEffect(() => {
+    // Gerar próximos 2 dias úteis
+    const dates = getNextWorkingDays(2);
+    setAvailableDates(dates);
+  }, []);
+
+  useEffect(() => {
+    // Buscar horários disponíveis quando uma data for selecionada
+    if (formData.dataAgendamento) {
+      fetchAvailableTimes(formData.dataAgendamento);
+    }
+  }, [formData.dataAgendamento]);
+
+  const fetchAvailableTimes = async (date: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('agendamentos')
+        .select('horario_agendamento')
+        .eq('data_agendamento', date);
+      
+      if (error) throw error;
+      
+      const bookedTimes = data.map(a => a.horario_agendamento);
+      const selectedDate = new Date(date + 'T00:00:00');
+      const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, selectedDate);
+      setAvailableTimes(filtered);
+    } catch (error) {
+      console.error('Error fetching available times:', error);
+      setAvailableTimes(AVAILABLE_TIMES);
+    }
+  };
+
+  const validateEmail = (email: string) => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+  };
+
+  const validateStep = (): boolean => {
+    setError('');
+    
+    switch (step) {
+      case 1:
+        if (!formData.nome.trim() || formData.nome.trim().length < 3) {
+          setError('Por favor, digite seu nome completo (mínimo 3 caracteres)');
+          return false;
+        }
+        break;
+      case 2:
+        const phoneDigits = formData.telefone.replace(/\D/g, '');
+        if (phoneDigits.length < 10) {
+          setError('Por favor, digite um telefone válido com DDD');
+          return false;
+        }
+        break;
+      case 3:
+        if (!validateEmail(formData.email)) {
+          setError('Por favor, digite um e-mail válido');
+          return false;
+        }
+        break;
+      case 4:
+        if (!formData.instagram.trim()) {
+          setError('Por favor, digite seu Instagram');
+          return false;
+        }
+        break;
+      case 5:
+        if (!formData.nicho.trim()) {
+          setError('Por favor, digite seu nicho de atuação');
+          return false;
+        }
+        break;
+      case 6:
+        if (!formData.cargo) {
+          setError('Por favor, selecione seu cargo');
+          return false;
+        }
+        break;
+      case 7:
+        if (!formData.faturamento) {
+          setError('Por favor, selecione seu faturamento');
+          return false;
+        }
+        break;
+      case 8:
+        if (!formData.dificuldade) {
+          setError('Por favor, selecione uma opção');
+          return false;
+        }
+        if (formData.dificuldade === 'Outro' && !formData.outraDificuldade?.trim()) {
+          setError('Por favor, descreva sua dificuldade');
+          return false;
+        }
+        break;
+      case 9:
+        if (!formData.investimento) {
+          setError('Por favor, selecione uma opção');
+          return false;
+        }
+        break;
+      case 10:
+        if (!formData.dataAgendamento) {
+          setError('Por favor, selecione uma data');
+          return false;
+        }
+        break;
+      case 11:
+        if (!formData.horarioAgendamento) {
+          setError('Por favor, selecione um horário');
+          return false;
+        }
+        break;
+    }
+    
+    return true;
+  };
+
+  const handleNext = async () => {
+    if (!validateStep()) return;
+    
+    try {
+      await saveProgress(formData, step);
+      
+      if (step < 11) {
+        setStep(step + 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        await handleSubmit();
+      }
+    } catch (error) {
+      console.error('Error saving progress:', error);
+      toast.error('Erro ao salvar progresso. Tente novamente.');
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await completeForm(formData);
+      setStep(12); // Página de agradecimento
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error: any) {
+      console.error('Error completing form:', error);
+      if (error.message.includes('horário já foi reservado')) {
+        setError(error.message);
+        setStep(11); // Voltar para seleção de horário
+      } else {
+        toast.error('Erro ao finalizar aplicação. Tente novamente.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+      setError('');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const formatPhone = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length <= 10) {
+      return numbers.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    }
+    return numbers.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+  };
+
+  const updateField = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    setError('');
+  };
+
+  const renderStep = () => {
+    // Pergunta 1 - Nome
+    if (step === 1) {
+      return (
+        <div className="space-y-6">
+          <p className="text-lg text-muted-foreground">
+            Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil
+          </p>
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Qual é o seu nome completo?</h2>
+            <input
+              type="text"
+              value={formData.nome}
+              onChange={(e) => updateField('nome', e.target.value)}
+              placeholder="Digite seu nome completo"
+              className="w-full px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 2 - Telefone
+    if (step === 2) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-2">Qual é o seu telefone?</h2>
+            <p className="text-lg text-gray-300 mb-4">Inclua o DDD</p>
+            <div className="flex gap-2">
+              <div className="flex items-center px-4 py-4 text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
+                +55
+              </div>
+              <input
+                type="tel"
+                value={formData.telefone}
+                onChange={(e) => updateField('telefone', formatPhone(e.target.value))}
+                placeholder="(00) 00000-0000"
+                className="flex-1 px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+                autoFocus
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 3 - Email
+    if (step === 3) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Qual é o seu e-mail?</h2>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => updateField('email', e.target.value)}
+              placeholder="seu@email.com"
+              className="w-full px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 4 - Instagram
+    if (step === 4) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Qual é o seu Instagram?</h2>
+            <div className="flex gap-2">
+              <div className="flex items-center px-4 py-4 text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
+                @
+              </div>
+              <input
+                type="text"
+                value={formData.instagram}
+                onChange={(e) => updateField('instagram', e.target.value.replace('@', ''))}
+                placeholder="seuinstagram"
+                className="flex-1 px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+                autoFocus
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 5 - Nicho
+    if (step === 5) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Qual é o seu nicho de atuação?</h2>
+            <input
+              type="text"
+              value={formData.nicho}
+              onChange={(e) => updateField('nicho', e.target.value)}
+              placeholder="Ex: Estética, Saúde, Educação..."
+              className="w-full px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 6 - Cargo
+    if (step === 6) {
+      const cargos = ['Dono', 'Gerente', 'Autônomo', 'Colaborador', 'Vendedor'];
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
+            <div className="space-y-3">
+              {cargos.map((cargo) => (
+                <label
+                  key={cargo}
+                  className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                    formData.cargo === cargo
+                      ? 'bg-accent border border-accent-foreground'
+                      : 'bg-secondary border border-border hover:bg-secondary/80'
+                  }`}
+                  onClick={() => updateField('cargo', cargo)}
+                >
+                  <input
+                    type="radio"
+                    name="cargo"
+                    value={cargo}
+                    checked={formData.cargo === cargo}
+                    onChange={() => updateField('cargo', cargo)}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span className="text-white">{cargo}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 7 - Faturamento
+    if (step === 7) {
+      const faturamentos = [
+        'Ainda não fatura',
+        '5-15k',
+        '15-50k',
+        '50-100k',
+        '100-200k',
+        '200-500k',
+        'Acima de 500k'
+      ];
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-6">Qual é o seu faturamento mensal?</h2>
+            <div className="space-y-3">
+              {faturamentos.map((faturamento) => (
+                <label
+                  key={faturamento}
+                  className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                    formData.faturamento === faturamento
+                      ? 'bg-accent border border-accent-foreground'
+                      : 'bg-secondary border border-border hover:bg-secondary/80'
+                  }`}
+                  onClick={() => updateField('faturamento', faturamento)}
+                >
+                  <input
+                    type="radio"
+                    name="faturamento"
+                    value={faturamento}
+                    checked={formData.faturamento === faturamento}
+                    onChange={() => updateField('faturamento', faturamento)}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span className="text-white">{faturamento}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 8 - Dificuldade
+    if (step === 8) {
+      const dificuldades = [
+        'Não consigo atrair leads qualificados de forma consistente.',
+        'Tenho dificuldade em converter os leads que chegam em vendas.',
+        'Estou preso demais na operação e não consigo focar no crescimento.',
+        'Meu negócio até cresce, mas sem estrutura, equipe ou processos sólidos.',
+        'Não tenho clareza dos números e isso trava minhas decisões.',
+        'Outro'
+      ];
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-6">Qual é a sua principal dificuldade hoje?</h2>
+            <div className="space-y-3">
+              {dificuldades.map((dificuldade) => (
+                <label
+                  key={dificuldade}
+                  className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                    formData.dificuldade === dificuldade
+                      ? 'bg-accent border border-accent-foreground'
+                      : 'bg-secondary border border-border hover:bg-secondary/80'
+                  }`}
+                  onClick={() => updateField('dificuldade', dificuldade)}
+                >
+                  <input
+                    type="radio"
+                    name="dificuldade"
+                    value={dificuldade}
+                    checked={formData.dificuldade === dificuldade}
+                    onChange={() => updateField('dificuldade', dificuldade)}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span className="text-white">{dificuldade}</span>
+                </label>
+              ))}
+            </div>
+            {formData.dificuldade === 'Outro' && (
+              <textarea
+                value={formData.outraDificuldade}
+                onChange={(e) => updateField('outraDificuldade', e.target.value)}
+                placeholder="Descreva sua principal dificuldade..."
+                className="w-full mt-4 px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+                rows={4}
+              />
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 9 - Investimento
+    if (step === 9) {
+      const investimentos = [
+        'Quero avaliar opções de parcelamento',
+        'Ainda não estou decidido, quero mais Informações',
+        'Pagamento à vista'
+      ];
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-2">O investimento para participar dos nossos programas é de R$ 9.997 a R$ 100k</h2>
+            <p className="text-lg text-gray-300 mb-6">Gostaria de seguir com o processo seletivo?</p>
+            <div className="space-y-3">
+              {investimentos.map((investimento) => (
+                <label
+                  key={investimento}
+                  className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                    formData.investimento === investimento
+                      ? 'bg-accent border border-accent-foreground'
+                      : 'bg-secondary border border-border hover:bg-secondary/80'
+                  }`}
+                  onClick={() => updateField('investimento', investimento)}
+                >
+                  <input
+                    type="radio"
+                    name="investimento"
+                    value={investimento}
+                    checked={formData.investimento === investimento}
+                    onChange={() => updateField('investimento', investimento)}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span className="text-white">{investimento}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 10 - Data
+    if (step === 10) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-2">Escolha a data da sua call</h2>
+            <p className="text-lg text-gray-300 mb-6">Selecione o melhor dia para conversar com um especialista</p>
+            <div className="space-y-3">
+              {availableDates.map((date) => {
+                const dateStr = formatDateForDB(date);
+                const displayStr = formatDateForDisplay(date);
+                return (
+                  <label
+                    key={dateStr}
+                    className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                      formData.dataAgendamento === dateStr
+                        ? 'bg-accent border border-accent-foreground'
+                        : 'bg-secondary border border-border hover:bg-secondary/80'
+                    }`}
+                    onClick={() => updateField('dataAgendamento', dateStr)}
+                  >
+                    <input
+                      type="radio"
+                      name="data"
+                      value={dateStr}
+                      checked={formData.dataAgendamento === dateStr}
+                      onChange={() => updateField('dataAgendamento', dateStr)}
+                      className="mr-3 h-4 w-4"
+                    />
+                    <span className="text-white capitalize">{displayStr}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Pergunta 11 - Horário
+    if (step === 11) {
+      const selectedDate = availableDates.find(
+        d => formatDateForDB(d) === formData.dataAgendamento
+      );
+      const displayDate = selectedDate ? formatDateForDisplay(selectedDate) : '';
+      
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-2">Escolha o horário</h2>
+            <p className="text-lg text-gray-300 mb-6 capitalize">Horários disponíveis para {displayDate}</p>
+            {availableTimes.length === 0 ? (
+              <div className="p-6 bg-destructive/10 border border-destructive rounded-lg">
+                <p className="text-destructive text-center">
+                  Não há horários disponíveis para esta data. Por favor, volte e escolha outra data.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-3">
+                {availableTimes.map((time) => (
+                  <label
+                    key={time}
+                    className={`flex items-center justify-center p-4 rounded-lg cursor-pointer transition font-semibold ${
+                      formData.horarioAgendamento === time
+                        ? 'bg-primary text-white border border-primary'
+                        : 'bg-secondary border border-border text-white hover:bg-secondary/80'
+                    }`}
+                    onClick={() => updateField('horarioAgendamento', time)}
+                  >
+                    <input
+                      type="radio"
+                      name="horario"
+                      value={time}
+                      checked={formData.horarioAgendamento === time}
+                      onChange={() => updateField('horarioAgendamento', time)}
+                      className="sr-only"
+                    />
+                    {time}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Página de Agradecimento
+    if (step === 12) {
+      const selectedDate = availableDates.find(
+        d => formatDateForDB(d) === formData.dataAgendamento
+      );
+      const displayDate = selectedDate ? formatDateForDisplay(selectedDate) : '';
+      const firstName = formData.nome.split(' ')[0];
+      
+      return (
+        <div className="text-center space-y-8">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center">
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-4">Obrigado, {firstName}!</h1>
+            <p className="text-xl text-gray-300 mb-8">
+              Sua aplicação foi recebida com sucesso. Sua call está agendada para:
+            </p>
+            <div className="bg-accent border border-accent-foreground rounded-lg p-6 mb-8 inline-block">
+              <p className="text-2xl font-bold text-white capitalize">{displayDate}</p>
+              <p className="text-3xl font-bold text-primary mt-2">{formData.horarioAgendamento}</p>
+            </div>
+            <p className="text-lg text-gray-300">
+              Entraremos em contato pelo WhatsApp para confirmar sua participação.
+            </p>
+          </div>
+          
+          <a
+            href="https://betheleducacao.com.br"
+            className="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition"
+          >
+            Voltar para o site
+          </a>
+        </div>
+      );
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background">
+      <FormHeader />
+      
+      <div className="max-w-xl mx-auto px-4 pb-12">
+        <div className="min-h-[60vh]">
+          {renderStep()}
+        </div>
+        
+        {error && (
+          <div className="mt-6 p-3 bg-destructive/20 border border-destructive rounded-lg">
+            <p className="text-destructive text-sm text-center">{error}</p>
+          </div>
+        )}
+        
+        {step < 12 && (
+          <div className="flex justify-between items-center mt-8">
+            {step > 1 ? (
+              <button
+                onClick={handleBack}
+                className="text-muted-foreground hover:text-foreground transition"
+              >
+                Voltar
+              </button>
+            ) : (
+              <div />
+            )}
+            
+            <button
+              onClick={handleNext}
+              disabled={isSubmitting}
+              className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {step === 11 ? (isSubmitting ? 'Confirmando...' : 'Confirmar Agendamento') : 'Continuar'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
