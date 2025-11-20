@@ -155,17 +155,19 @@ const Index = () => {
     if (!validateStep()) return;
     
     try {
+      // Tentar salvar progresso, mas continuar mesmo se falhar
       await saveProgress(formData, step);
-      
-      if (step < 11) {
-        setStep(step + 1);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        await handleSubmit();
-      }
     } catch (error) {
       console.error('Error saving progress:', error);
-      toast.error('Erro ao salvar progresso. Tente novamente.');
+      // Não bloquear o avanço se o save falhar
+    }
+    
+    // Avançar para próxima pergunta
+    if (step < 11) {
+      setStep(step + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      await handleSubmit();
     }
   };
 
