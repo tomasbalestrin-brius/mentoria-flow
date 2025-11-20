@@ -233,17 +233,17 @@ const Index = () => {
     if (step === 1) {
       return (
         <div className="space-y-6">
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base md:text-lg text-muted-foreground text-center md:text-left">
             Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil
           </p>
           <div>
-            <h2 className="text-2xl font-bold text-white mb-4">Qual é o seu nome completo?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">Qual é o seu nome completo?</h2>
             <input
               type="text"
               value={formData.nome}
               onChange={(e) => updateField('nome', e.target.value)}
               placeholder="Digite seu nome completo"
-              className="w-full px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
               autoFocus
             />
           </div>
@@ -256,10 +256,10 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-2">Qual é o seu telefone?</h2>
-            <p className="text-lg text-gray-300 mb-4">Inclua o DDD</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 text-center md:text-left">Qual é o seu telefone?</h2>
+            <p className="text-base md:text-lg text-gray-300 mb-4 text-center md:text-left">Inclua o DDD</p>
             <div className="flex gap-2">
-              <div className="flex items-center px-4 py-4 text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
+              <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
                 +55
               </div>
               <input
@@ -267,7 +267,7 @@ const Index = () => {
                 value={formData.telefone}
                 onChange={(e) => updateField('telefone', formatPhone(e.target.value))}
                 placeholder="(00) 00000-0000"
-                className="flex-1 px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+                className="flex-1 px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
                 autoFocus
               />
             </div>
@@ -281,13 +281,13 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-4">Qual é o seu e-mail?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">Qual é o seu e-mail?</h2>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => updateField('email', e.target.value)}
               placeholder="seu@email.com"
-              className="w-full px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
               autoFocus
             />
           </div>
@@ -300,9 +300,9 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-4">Qual é o seu Instagram?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">Qual é o seu Instagram?</h2>
             <div className="flex gap-2">
-              <div className="flex items-center px-4 py-4 text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
+              <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
                 @
               </div>
               <input
@@ -310,7 +310,7 @@ const Index = () => {
                 value={formData.instagram}
                 onChange={(e) => updateField('instagram', e.target.value.replace('@', ''))}
                 placeholder="seuinstagram"
-                className="flex-1 px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+                className="flex-1 px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
                 autoFocus
               />
             </div>
@@ -324,13 +324,13 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-4">Qual é o seu nicho de atuação?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">Qual é o seu nicho de atuação?</h2>
             <input
               type="text"
               value={formData.nicho}
               onChange={(e) => updateField('nicho', e.target.value)}
               placeholder="Ex: Estética, Saúde, Educação..."
-              className="w-full px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
               autoFocus
             />
           </div>
@@ -344,12 +344,12 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6 text-center md:text-left">Qual é o seu cargo na empresa?</h2>
             <div className="space-y-3">
               {cargos.map((cargo) => (
                 <label
                   key={cargo}
-                  className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                  className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                     formData.cargo === cargo
                       ? 'bg-accent border border-accent-foreground'
                       : 'bg-secondary border border-border hover:bg-secondary/80'
@@ -364,7 +364,7 @@ const Index = () => {
                     onChange={() => updateField('cargo', cargo)}
                     className="mr-3 h-4 w-4"
                   />
-                  <span className="text-white">{cargo}</span>
+                  <span className="text-white text-sm md:text-base">{cargo}</span>
                 </label>
               ))}
             </div>
@@ -387,12 +387,12 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Qual é o seu faturamento mensal?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6 text-center md:text-left">Qual é o seu faturamento mensal?</h2>
             <div className="space-y-3">
               {faturamentos.map((faturamento) => (
                 <label
                   key={faturamento}
-                  className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                  className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                     formData.faturamento === faturamento
                       ? 'bg-accent border border-accent-foreground'
                       : 'bg-secondary border border-border hover:bg-secondary/80'
@@ -407,7 +407,7 @@ const Index = () => {
                     onChange={() => updateField('faturamento', faturamento)}
                     className="mr-3 h-4 w-4"
                   />
-                  <span className="text-white">{faturamento}</span>
+                  <span className="text-white text-sm md:text-base">{faturamento}</span>
                 </label>
               ))}
             </div>
@@ -429,12 +429,12 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Qual é a sua principal dificuldade hoje?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6 text-center md:text-left">Qual é a sua principal dificuldade hoje?</h2>
             <div className="space-y-3">
               {dificuldades.map((dificuldade) => (
                 <label
                   key={dificuldade}
-                  className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                  className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                     formData.dificuldade === dificuldade
                       ? 'bg-accent border border-accent-foreground'
                       : 'bg-secondary border border-border hover:bg-secondary/80'
@@ -449,7 +449,7 @@ const Index = () => {
                     onChange={() => updateField('dificuldade', dificuldade)}
                     className="mr-3 h-4 w-4"
                   />
-                  <span className="text-white">{dificuldade}</span>
+                  <span className="text-white text-sm md:text-base">{dificuldade}</span>
                 </label>
               ))}
             </div>
@@ -458,7 +458,7 @@ const Index = () => {
                 value={formData.outraDificuldade}
                 onChange={(e) => updateField('outraDificuldade', e.target.value)}
                 placeholder="Descreva sua principal dificuldade..."
-                className="w-full mt-4 px-4 py-4 text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+                className="w-full mt-4 px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
                 rows={4}
               />
             )}
@@ -477,13 +477,13 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-2">O investimento para participar dos nossos programas é de R$ 9.997 a R$ 100k</h2>
-            <p className="text-lg text-gray-300 mb-6">Gostaria de seguir com o processo seletivo?</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 text-center md:text-left">O investimento para participar dos nossos programas é de R$ 9.997 a R$ 100k</h2>
+            <p className="text-base md:text-lg text-gray-300 mb-6 text-center md:text-left">Gostaria de seguir com o processo seletivo?</p>
             <div className="space-y-3">
               {investimentos.map((investimento) => (
                 <label
                   key={investimento}
-                  className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                  className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                     formData.investimento === investimento
                       ? 'bg-accent border border-accent-foreground'
                       : 'bg-secondary border border-border hover:bg-secondary/80'
@@ -498,7 +498,7 @@ const Index = () => {
                     onChange={() => updateField('investimento', investimento)}
                     className="mr-3 h-4 w-4"
                   />
-                  <span className="text-white">{investimento}</span>
+                  <span className="text-white text-sm md:text-base">{investimento}</span>
                 </label>
               ))}
             </div>
@@ -512,8 +512,8 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-2">Escolha a data da sua call</h2>
-            <p className="text-lg text-gray-300 mb-6">Selecione o melhor dia para conversar com um especialista</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 text-center md:text-left">Escolha a data da sua call</h2>
+            <p className="text-base md:text-lg text-gray-300 mb-6 text-center md:text-left">Selecione o melhor dia para conversar com um especialista</p>
             <div className="space-y-3">
               {availableDates.map((date) => {
                 const dateStr = formatDateForDB(date);
@@ -521,7 +521,7 @@ const Index = () => {
                 return (
                   <label
                     key={dateStr}
-                    className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
+                    className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                       formData.data_agendamento === dateStr
                         ? 'bg-accent border border-accent-foreground'
                         : 'bg-secondary border border-border hover:bg-secondary/80'
@@ -536,7 +536,7 @@ const Index = () => {
                       onChange={() => updateField('data_agendamento', dateStr)}
                       className="mr-3 h-4 w-4"
                     />
-                    <span className="text-white capitalize">{displayStr}</span>
+                    <span className="text-white capitalize text-sm md:text-base">{displayStr}</span>
                   </label>
                 );
               })}
@@ -556,20 +556,20 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-2">Escolha o horário</h2>
-            <p className="text-lg text-gray-300 mb-6 capitalize">Horários disponíveis para {displayDate}</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 text-center md:text-left">Escolha o horário</h2>
+            <p className="text-base md:text-lg text-gray-300 mb-6 capitalize text-center md:text-left">Horários disponíveis para {displayDate}</p>
             {availableTimes.length === 0 ? (
-              <div className="p-6 bg-destructive/10 border border-destructive rounded-lg">
-                <p className="text-destructive text-center">
+              <div className="p-4 md:p-6 bg-destructive/10 border border-destructive rounded-lg">
+                <p className="text-destructive text-center text-sm md:text-base">
                   Não há horários disponíveis para esta data. Por favor, volte e escolha outra data.
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                 {availableTimes.map((time) => (
                   <label
                     key={time}
-                    className={`flex items-center justify-center p-4 rounded-lg cursor-pointer transition font-semibold ${
+                    className={`flex items-center justify-center p-3 md:p-4 rounded-lg cursor-pointer transition font-semibold text-sm md:text-base ${
                       formData.horario_agendamento === time
                         ? 'bg-primary text-white border border-primary'
                         : 'bg-secondary border border-border text-white hover:bg-secondary/80'
@@ -603,54 +603,54 @@ const Index = () => {
       const firstName = formData.nome.split(' ')[0];
       
       return (
-        <div className="max-w-3xl mx-auto space-y-8">
+        <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
           {/* Obrigado com barra lateral */}
-          <div className="flex gap-4 items-start">
-            <div className="w-1 h-16 bg-primary rounded-full flex-shrink-0" />
+          <div className="flex gap-3 md:gap-4 items-start">
+            <div className="w-1 h-12 md:h-16 bg-primary rounded-full flex-shrink-0" />
             <div>
-              <h1 className="text-4xl font-bold text-white mb-4">Obrigado!</h1>
-              <p className="text-lg text-gray-300">
+              <h1 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-4">Obrigado!</h1>
+              <p className="text-base md:text-lg text-gray-300">
                 Sua entrevista foi agendada com sucesso.
               </p>
             </div>
           </div>
 
           {/* Box de agendamento */}
-          <div className="bg-secondary/50 border border-border rounded-lg p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-secondary/50 border border-border rounded-lg p-4 md:p-6">
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
               <div>
-                <p className="text-white font-semibold text-lg capitalize">{displayDate}</p>
-                <p className="text-primary font-bold text-2xl">{formData.horario_agendamento}</p>
+                <p className="text-white font-semibold text-base md:text-lg capitalize">{displayDate}</p>
+                <p className="text-primary font-bold text-xl md:text-2xl">{formData.horario_agendamento}</p>
               </div>
             </div>
           </div>
 
           {/* Texto informativo */}
-          <p className="text-gray-300 text-center">
+          <p className="text-gray-300 text-center text-sm md:text-base">
             As informações sobre a entrevista foram adicionadas à sua agenda.
           </p>
           
-          <p className="text-primary font-semibold text-center text-lg">
+          <p className="text-primary font-semibold text-center text-base md:text-lg">
             Entraremos em contato via link do Google Meet.
           </p>
 
           {/* Vídeo do YouTube - placeholder até receber o link */}
           <div className="aspect-video bg-secondary/30 border border-border rounded-lg overflow-hidden">
             <div className="w-full h-full flex items-center justify-center">
-              <p className="text-muted-foreground">Vídeo será adicionado em breve</p>
+              <p className="text-muted-foreground text-sm md:text-base">Vídeo será adicionado em breve</p>
             </div>
           </div>
 
           {/* Botão CTA */}
-          <div className="text-center pt-4">
+          <div className="text-center pt-2 md:pt-4">
             <a
               href="https://lp.bethelescoladenegocios.com.br/bethel-educacao-pag-ot-v1-h1"
-              className="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition text-lg"
+              className="inline-block px-6 md:px-8 py-3 md:py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition text-base md:text-lg"
             >
               Conheça nossos programas
             </a>
@@ -664,7 +664,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <FormHeader />
       
-      <div className="max-w-xl mx-auto px-4 pb-12">
+      <div className="max-w-xl mx-auto px-5 md:px-4 pb-12">
         <div className="min-h-[60vh]">
           {renderStep()}
         </div>
