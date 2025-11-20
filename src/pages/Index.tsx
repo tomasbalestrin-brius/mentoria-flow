@@ -36,9 +36,9 @@ const Index = () => {
   const { saveProgress, completeForm } = useFormPersistence();
 
   useEffect(() => {
-    // Gerar hoje + próximos 4 dias úteis e filtrar apenas os que têm horários
+    // Gerar apenas hoje e amanhã e filtrar apenas os que têm horários
     const fetchDatesWithAvailability = async () => {
-      const dates = getNextWorkingDays(5);
+      const dates = getNextWorkingDays(2);
       const datesMap = new Map<string, string[]>();
       const validDates: Date[] = [];
       
@@ -562,7 +562,9 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Ultimo passo, Entrevista com um de nossos especialistas para validação do seu perfil. Escolha o melhor dia e hora (horário de Brasília):</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">Último passo:</h2>
+            <p className="text-[13px] md:text-lg text-gray-300 mb-2">Entrevista com um de nossos especialistas para validação do seu perfil.</p>
+            <p className="text-[13px] md:text-lg text-white mb-6">Escolha o melhor dia e hora (horário de Brasília):</p>
             <div className="space-y-3">
               {availableDates.map((date) => {
                 const dateStr = formatDateForDB(date);
