@@ -233,11 +233,11 @@ const Index = () => {
     if (step === 1) {
       return (
         <div className="space-y-6">
-          <p className="text-base md:text-lg text-muted-foreground text-center md:text-left">
+          <p className="text-base md:text-lg text-muted-foreground">
             Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil
           </p>
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">Qual é o seu nome completo?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4">Qual é o seu nome completo?</h2>
             <input
               type="text"
               value={formData.nome}
@@ -256,8 +256,8 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 text-center md:text-left">Qual é o seu telefone?</h2>
-            <p className="text-base md:text-lg text-gray-300 mb-4 text-center md:text-left">Inclua o DDD</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Qual é o seu telefone?</h2>
+            <p className="text-base md:text-lg text-gray-300 mb-4">Inclua o DDD</p>
             <div className="flex gap-2">
               <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
                 +55
@@ -281,7 +281,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">Qual é o seu e-mail?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4">Qual é o seu e-mail?</h2>
             <input
               type="email"
               value={formData.email}
@@ -300,7 +300,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">Qual é o seu Instagram?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4">Qual é o seu Instagram?</h2>
             <div className="flex gap-2">
               <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
                 @
@@ -324,7 +324,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 text-center md:text-left">Qual é o seu nicho de atuação?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4">Qual é o seu nicho de atuação?</h2>
             <input
               type="text"
               value={formData.nicho}
@@ -344,7 +344,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-6 text-center md:text-left">Qual é o seu cargo na empresa?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
             <div className="space-y-3">
               {cargos.map((cargo) => (
                 <label
@@ -387,7 +387,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-6 text-center md:text-left">Qual é o seu faturamento mensal?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6">Qual é o seu faturamento mensal?</h2>
             <div className="space-y-3">
               {faturamentos.map((faturamento) => (
                 <label
@@ -429,7 +429,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-6 text-center md:text-left">Qual é a sua principal dificuldade hoje?</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6">Qual é a sua principal dificuldade hoje?</h2>
             <div className="space-y-3">
               {dificuldades.map((dificuldade) => (
                 <label
@@ -477,8 +477,8 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 text-center md:text-left">O investimento para participar dos nossos programas é de R$ 9.997 a R$ 100k</h2>
-            <p className="text-base md:text-lg text-gray-300 mb-6 text-center md:text-left">Gostaria de seguir com o processo seletivo?</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">O investimento para participar dos nossos programas é de R$ 9.997 a R$ 100k</h2>
+            <p className="text-base md:text-lg text-gray-300 mb-6">Gostaria de seguir com o processo seletivo?</p>
             <div className="space-y-3">
               {investimentos.map((investimento) => (
                 <label
@@ -512,8 +512,8 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 text-center md:text-left">Escolha a data da sua call</h2>
-            <p className="text-base md:text-lg text-gray-300 mb-6 text-center md:text-left">Selecione o melhor dia para conversar com um especialista</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Escolha a data da sua call</h2>
+            <p className="text-base md:text-lg text-gray-300 mb-6">Selecione o melhor dia para conversar com um especialista</p>
             <div className="space-y-3">
               {availableDates.map((date) => {
                 const dateStr = formatDateForDB(date);
@@ -556,11 +556,11 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-2 text-center md:text-left">Escolha o horário</h2>
-            <p className="text-base md:text-lg text-gray-300 mb-6 capitalize text-center md:text-left">Horários disponíveis para {displayDate}</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Escolha o horário</h2>
+            <p className="text-base md:text-lg text-gray-300 mb-6 capitalize">Horários disponíveis para {displayDate}</p>
             {availableTimes.length === 0 ? (
               <div className="p-4 md:p-6 bg-destructive/10 border border-destructive rounded-lg">
-                <p className="text-destructive text-center text-sm md:text-base">
+                <p className="text-destructive text-sm md:text-base">
                   Não há horários disponíveis para esta data. Por favor, volte e escolha outra data.
                 </p>
               </div>
