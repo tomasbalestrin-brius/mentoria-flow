@@ -603,35 +603,64 @@ const Index = () => {
       const firstName = formData.nome.split(' ')[0];
       
       return (
-        <div className="text-center space-y-8">
-          <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
+        <div className="max-w-3xl mx-auto space-y-8">
+          {/* Título superior */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-semibold text-white">Bethel Programas Presenciais</h2>
+            <div className="w-full h-px bg-border mt-4" />
+          </div>
+
+          {/* Obrigado com barra lateral */}
+          <div className="flex gap-4 items-start">
+            <div className="w-1 h-16 bg-primary rounded-full flex-shrink-0" />
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-4">Obrigado!</h1>
+              <p className="text-lg text-gray-300">
+                Sua entrevista foi agendada com sucesso.
+              </p>
             </div>
           </div>
-          
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-4">Obrigado, {firstName}!</h1>
-            <p className="text-xl text-gray-300 mb-8">
-              Sua aplicação foi recebida com sucesso. Sua call está agendada para:
-            </p>
-            <div className="bg-accent border border-accent-foreground rounded-lg p-6 mb-8 inline-block">
-              <p className="text-2xl font-bold text-white capitalize">{displayDate}</p>
-              <p className="text-3xl font-bold text-primary mt-2">{formData.horario_agendamento}</p>
+
+          {/* Box de agendamento */}
+          <div className="bg-secondary/50 border border-border rounded-lg p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-white font-semibold text-lg capitalize">{displayDate}</p>
+                <p className="text-primary font-bold text-2xl">{formData.horario_agendamento}</p>
+              </div>
             </div>
-            <p className="text-lg text-gray-300">
-              Entraremos em contato pelo WhatsApp para confirmar sua participação.
-            </p>
           </div>
+
+          {/* Texto informativo */}
+          <p className="text-gray-300 text-center">
+            As informações sobre a entrevista foram adicionadas à sua agenda.
+          </p>
           
-          <a
-            href="https://lp.bethelescoladenegocios.com.br/bethel-educacao-pag-ot-v1-h1"
-            className="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition"
-          >
-            Voltar para o site
-          </a>
+          <p className="text-primary font-semibold text-center text-lg">
+            Entraremos em contato via link do Google Meet.
+          </p>
+
+          {/* Vídeo do YouTube - placeholder até receber o link */}
+          <div className="aspect-video bg-secondary/30 border border-border rounded-lg overflow-hidden">
+            <div className="w-full h-full flex items-center justify-center">
+              <p className="text-muted-foreground">Vídeo será adicionado em breve</p>
+            </div>
+          </div>
+
+          {/* Botão CTA */}
+          <div className="text-center pt-4">
+            <a
+              href="https://lp.bethelescoladenegocios.com.br/bethel-educacao-pag-ot-v1-h1"
+              className="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition text-lg"
+            >
+              Conhecer os programas
+            </a>
+          </div>
         </div>
       );
     }
