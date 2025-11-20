@@ -12,8 +12,8 @@ export interface FormData {
   dificuldade: string;
   outraDificuldade?: string;
   investimento: string;
-  dataAgendamento: string;
-  horarioAgendamento: string;
+  data_agendamento: string;
+  horario_agendamento: string;
 }
 
 const SPREADSHEET_ID = '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8';
@@ -34,8 +34,8 @@ export const useFormPersistence = () => {
       formData.faturamento || '',
       formData.dificuldade === 'Outro' ? formData.outraDificuldade || '' : formData.dificuldade || '',
       formData.investimento || '',
-      formData.dataAgendamento || '',
-      formData.horarioAgendamento || '',
+      formData.data_agendamento || '',
+      formData.horario_agendamento || '',
       isComplete ? 'Completo' : 'Incompleto',
       step.toString()
     ];
@@ -132,8 +132,8 @@ export const useFormPersistence = () => {
       const { error: agendamentoError } = await supabase
         .from('agendamentos')
         .insert([{
-          data_agendamento: formData.dataAgendamento,
-          horario_agendamento: formData.horarioAgendamento,
+          data_agendamento: formData.data_agendamento,
+          horario_agendamento: formData.horario_agendamento,
           nome_cliente: formData.nome,
           email_cliente: formData.email,
           telefone_cliente: formData.telefone,

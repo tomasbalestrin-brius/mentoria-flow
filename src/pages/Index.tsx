@@ -24,8 +24,8 @@ const Index = () => {
     dificuldade: '',
     outraDificuldade: '',
     investimento: '',
-    dataAgendamento: '',
-    horarioAgendamento: '',
+    data_agendamento: '',
+    horario_agendamento: '',
   });
   const [error, setError] = useState('');
   const [availableDates, setAvailableDates] = useState<Date[]>([]);
@@ -42,10 +42,10 @@ const Index = () => {
 
   useEffect(() => {
     // Buscar horários disponíveis quando uma data for selecionada
-    if (formData.dataAgendamento) {
-      fetchAvailableTimes(formData.dataAgendamento);
+    if (formData.data_agendamento) {
+      fetchAvailableTimes(formData.data_agendamento);
     }
-  }, [formData.dataAgendamento]);
+  }, [formData.data_agendamento]);
 
   const fetchAvailableTimes = async (date: string) => {
     try {
@@ -135,13 +135,13 @@ const Index = () => {
         }
         break;
       case 10:
-        if (!formData.dataAgendamento) {
+        if (!formData.data_agendamento) {
           setError('Por favor, selecione uma data');
           return false;
         }
         break;
       case 11:
-        if (!formData.horarioAgendamento) {
+        if (!formData.horario_agendamento) {
           setError('Por favor, selecione um horário');
           return false;
         }
@@ -503,18 +503,18 @@ const Index = () => {
                   <label
                     key={dateStr}
                     className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
-                      formData.dataAgendamento === dateStr
+                      formData.data_agendamento === dateStr
                         ? 'bg-accent border border-accent-foreground'
                         : 'bg-secondary border border-border hover:bg-secondary/80'
                     }`}
-                    onClick={() => updateField('dataAgendamento', dateStr)}
+                    onClick={() => updateField('data_agendamento', dateStr)}
                   >
                     <input
                       type="radio"
                       name="data"
                       value={dateStr}
-                      checked={formData.dataAgendamento === dateStr}
-                      onChange={() => updateField('dataAgendamento', dateStr)}
+                      checked={formData.data_agendamento === dateStr}
+                      onChange={() => updateField('data_agendamento', dateStr)}
                       className="mr-3 h-4 w-4"
                     />
                     <span className="text-white capitalize">{displayStr}</span>
@@ -530,7 +530,7 @@ const Index = () => {
     // Pergunta 11 - Horário
     if (step === 11) {
       const selectedDate = availableDates.find(
-        d => formatDateForDB(d) === formData.dataAgendamento
+        d => formatDateForDB(d) === formData.data_agendamento
       );
       const displayDate = selectedDate ? formatDateForDisplay(selectedDate) : '';
       
@@ -551,18 +551,18 @@ const Index = () => {
                   <label
                     key={time}
                     className={`flex items-center justify-center p-4 rounded-lg cursor-pointer transition font-semibold ${
-                      formData.horarioAgendamento === time
+                      formData.horario_agendamento === time
                         ? 'bg-primary text-white border border-primary'
                         : 'bg-secondary border border-border text-white hover:bg-secondary/80'
                     }`}
-                    onClick={() => updateField('horarioAgendamento', time)}
+                    onClick={() => updateField('horario_agendamento', time)}
                   >
                     <input
                       type="radio"
                       name="horario"
                       value={time}
-                      checked={formData.horarioAgendamento === time}
-                      onChange={() => updateField('horarioAgendamento', time)}
+                      checked={formData.horario_agendamento === time}
+                      onChange={() => updateField('horario_agendamento', time)}
                       className="sr-only"
                     />
                     {time}
@@ -578,7 +578,7 @@ const Index = () => {
     // Página de Agradecimento
     if (step === 12) {
       const selectedDate = availableDates.find(
-        d => formatDateForDB(d) === formData.dataAgendamento
+        d => formatDateForDB(d) === formData.data_agendamento
       );
       const displayDate = selectedDate ? formatDateForDisplay(selectedDate) : '';
       const firstName = formData.nome.split(' ')[0];
@@ -600,7 +600,7 @@ const Index = () => {
             </p>
             <div className="bg-accent border border-accent-foreground rounded-lg p-6 mb-8 inline-block">
               <p className="text-2xl font-bold text-white capitalize">{displayDate}</p>
-              <p className="text-3xl font-bold text-primary mt-2">{formData.horarioAgendamento}</p>
+              <p className="text-3xl font-bold text-primary mt-2">{formData.horario_agendamento}</p>
             </div>
             <p className="text-lg text-gray-300">
               Entraremos em contato pelo WhatsApp para confirmar sua participação.
