@@ -14,7 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agendamentos: {
+        Row: {
+          created_at: string | null
+          data_agendamento: string
+          email_cliente: string | null
+          horario_agendamento: string
+          id: string
+          nome_cliente: string | null
+          status: string | null
+          telefone_cliente: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data_agendamento: string
+          email_cliente?: string | null
+          horario_agendamento: string
+          id?: string
+          nome_cliente?: string | null
+          status?: string | null
+          telefone_cliente?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data_agendamento?: string
+          email_cliente?: string | null
+          horario_agendamento?: string
+          id?: string
+          nome_cliente?: string | null
+          status?: string | null
+          telefone_cliente?: string | null
+        }
+        Relationships: []
+      }
+      aplicacoes_mentoria: {
+        Row: {
+          cargo: string | null
+          created_at: string | null
+          data_agendamento: string | null
+          dificuldade: string | null
+          email: string | null
+          faturamento: string | null
+          horario_agendamento: string | null
+          id: string
+          instagram: string | null
+          investimento: string | null
+          nicho: string | null
+          nome: string | null
+          sheet_row_id: number | null
+          status: string | null
+          telefone: string | null
+          ultima_pergunta: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          cargo?: string | null
+          created_at?: string | null
+          data_agendamento?: string | null
+          dificuldade?: string | null
+          email?: string | null
+          faturamento?: string | null
+          horario_agendamento?: string | null
+          id?: string
+          instagram?: string | null
+          investimento?: string | null
+          nicho?: string | null
+          nome?: string | null
+          sheet_row_id?: number | null
+          status?: string | null
+          telefone?: string | null
+          ultima_pergunta?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          cargo?: string | null
+          created_at?: string | null
+          data_agendamento?: string | null
+          dificuldade?: string | null
+          email?: string | null
+          faturamento?: string | null
+          horario_agendamento?: string | null
+          id?: string
+          instagram?: string | null
+          investimento?: string | null
+          nicho?: string | null
+          nome?: string | null
+          sheet_row_id?: number | null
+          status?: string | null
+          telefone?: string | null
+          ultima_pergunta?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
