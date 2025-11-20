@@ -237,7 +237,7 @@ const Index = () => {
             Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil
           </p>
           <div>
-            <h2 className="text-[18px] md:text-2xl font-bold text-white mb-4">Qual é o seu nome completo?</h2>
+            <h2 className="text-[18px] md:text-2xl font-normal md:font-bold text-white mb-4">Qual é o seu nome completo?</h2>
             <input
               type="text"
               value={formData.nome}
@@ -256,7 +256,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[18px] md:text-2xl font-bold text-white mb-2">Qual é o seu telefone?</h2>
+            <h2 className="text-[18px] md:text-2xl font-normal md:font-bold text-white mb-2">Qual é o seu telefone?</h2>
             <p className="text-sm md:text-lg text-gray-300 mb-4">Inclua o DDD</p>
             <div className="flex gap-2">
               <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
@@ -281,7 +281,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[18px] md:text-2xl font-bold text-white mb-4">Qual é o seu e-mail?</h2>
+            <h2 className="text-[18px] md:text-2xl font-normal md:font-bold text-white mb-4">Qual é o seu e-mail?</h2>
             <input
               type="email"
               value={formData.email}
@@ -300,7 +300,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[18px] md:text-2xl font-bold text-white mb-4">Qual é o seu Instagram?</h2>
+            <h2 className="text-[18px] md:text-2xl font-normal md:font-bold text-white mb-4">Qual é o seu Instagram?</h2>
             <div className="flex gap-2">
               <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
                 @
@@ -324,7 +324,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[18px] md:text-2xl font-bold text-white mb-4">Qual é o seu nicho de atuação?</h2>
+            <h2 className="text-[18px] md:text-2xl font-normal md:font-bold text-white mb-4">Qual é o seu nicho de atuação?</h2>
             <input
               type="text"
               value={formData.nicho}
@@ -344,7 +344,7 @@ const Index = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[18px] md:text-2xl font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
+            <h2 className="text-[18px] md:text-2xl font-normal md:font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
             <div className="space-y-3">
               {cargos.map((cargo) => (
                 <label
