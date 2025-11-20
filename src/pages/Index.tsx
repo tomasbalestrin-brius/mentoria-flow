@@ -639,11 +639,18 @@ const Index = () => {
             Entraremos em contato via link do Google Meet.
           </p>
 
-          {/* Vídeo do YouTube - placeholder até receber o link */}
+          {/* Vídeo do YouTube */}
           <div className="aspect-video bg-secondary/30 border border-border rounded-lg overflow-hidden">
-            <div className="w-full h-full flex items-center justify-center">
-              <p className="text-muted-foreground text-sm md:text-base">Vídeo será adicionado em breve</p>
-            </div>
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/IiUbOztFW7o"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="w-full h-full"
+            />
           </div>
 
           {/* Botão CTA */}
