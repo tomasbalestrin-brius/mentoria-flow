@@ -478,7 +478,7 @@ const Index = () => {
         <div className="space-y-6">
           <div>
             <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">O investimento para participar dos nossos programas é de R$ 9.997 a R$ 100k</h2>
-            <p className="text-base md:text-lg text-gray-300 mb-6">Gostaria de seguir com o processo seletivo?</p>
+            <p className="text-[13px] md:text-lg text-gray-300 mb-6">Gostaria de seguir com o processo seletivo?</p>
             <div className="space-y-3">
               {investimentos.map((investimento) => (
                 <label
@@ -513,7 +513,7 @@ const Index = () => {
         <div className="space-y-6">
           <div>
             <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">Escolha a data da sua call</h2>
-            <p className="text-base md:text-lg text-gray-300 mb-6">Selecione o melhor dia para conversar com um especialista</p>
+            <p className="text-[13px] md:text-lg text-gray-300 mb-6">Selecione o melhor dia para conversar com um especialista</p>
             <div className="space-y-3">
               {availableDates.map((date) => {
                 const dateStr = formatDateForDB(date);
@@ -557,7 +557,7 @@ const Index = () => {
         <div className="space-y-6">
           <div>
             <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">Escolha o horário</h2>
-            <p className="text-base md:text-lg text-gray-300 mb-6 capitalize">Horários disponíveis para {displayDate}</p>
+            <p className="text-[13px] md:text-lg text-gray-300 mb-6 capitalize">Horários disponíveis para {displayDate}</p>
             {availableTimes.length === 0 ? (
               <div className="p-4 md:p-6 bg-destructive/10 border border-destructive rounded-lg">
                 <p className="text-destructive text-sm md:text-base">
