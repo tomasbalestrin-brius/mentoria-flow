@@ -35,8 +35,8 @@ const Index = () => {
   const { saveProgress, completeForm } = useFormPersistence();
 
   useEffect(() => {
-    // Gerar próximos 2 dias úteis
-    const dates = getNextWorkingDays(2);
+    // Gerar hoje + próximos 2 dias úteis (total 3 dias)
+    const dates = getNextWorkingDays(3);
     setAvailableDates(dates);
   }, []);
 
@@ -49,14 +49,31 @@ const Index = () => {
 
   const fetchAvailableTimes = async (date: string) => {
     try {
-      const { data, error } = await supabase
-        .from('agendamentos')
-        .select('horario_agendamento')
-        .eq('data_agendamento', date);
+      // Buscar horários ocupados da planilha Google Sheets
+      const { data: sheetData, error: sheetError } = await supabase.functions.invoke('get-booked-times', {
+        body: {
+          date,
+          spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
+        }
+      });
+
+      if (sheetError) {
+        console.error('Error fetching from sheets:', sheetError);
+        // Se falhar, tentar do Supabase
+        const { data: supabaseData, error: supabaseError } = await supabase
+          .from('agendamentos')
+          .select('horario_agendamento')
+          .eq('data_agendamento', date);
+        
+        if (supabaseError) throw supabaseError;
+        const bookedTimes = supabaseData.map(a => a.horario_agendamento);
+        const selectedDate = new Date(date + 'T00:00:00');
+        const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, selectedDate);
+        setAvailableTimes(filtered);
+        return;
+      }
       
-      if (error) throw error;
-      
-      const bookedTimes = data.map(a => a.horario_agendamento);
+      const bookedTimes = sheetData?.bookedTimes || [];
       const selectedDate = new Date(date + 'T00:00:00');
       const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, selectedDate);
       setAvailableTimes(filtered);
@@ -610,7 +627,7 @@ const Index = () => {
           </div>
           
           <a
-            href="https://betheleducacao.com.br"
+            href="https://lp.bethelescoladenegocios.com.br/bethel-educacao-pag-ot-v1-h1"
             className="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition"
           >
             Voltar para o site

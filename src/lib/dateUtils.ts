@@ -5,6 +5,12 @@ export const getNextWorkingDays = (count: number): Date[] => {
   const workingDays: Date[] = [];
   let currentDate = new Date();
   
+  // Adicionar hoje se for dia útil
+  if (!isWeekend(currentDate)) {
+    workingDays.push(new Date(currentDate));
+  }
+  
+  // Adicionar próximos dias úteis
   while (workingDays.length < count) {
     currentDate = addDays(currentDate, 1);
     if (!isWeekend(currentDate)) {
