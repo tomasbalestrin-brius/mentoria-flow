@@ -604,12 +604,6 @@ const Index = () => {
       
       return (
         <div className="max-w-3xl mx-auto space-y-8">
-          {/* Título superior */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-semibold text-white">Bethel Programas Presenciais</h2>
-            <div className="w-full h-px bg-border mt-4" />
-          </div>
-
           {/* Obrigado com barra lateral */}
           <div className="flex gap-4 items-start">
             <div className="w-1 h-16 bg-primary rounded-full flex-shrink-0" />
@@ -658,7 +652,7 @@ const Index = () => {
               href="https://lp.bethelescoladenegocios.com.br/bethel-educacao-pag-ot-v1-h1"
               className="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition text-lg"
             >
-              Conhecer os programas
+              Conheça nossos programas
             </a>
           </div>
         </div>
