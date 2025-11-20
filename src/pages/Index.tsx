@@ -694,11 +694,10 @@ const Index = () => {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/IiUbOztFW7o"
+              src="https://www.youtube.com/embed/IiUbOztFW7o?autoplay=1&mute=1&modestbranding=1&rel=0&controls=1&showinfo=0&iv_load_policy=3&playsinline=1"
               title="YouTube video player"
               frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               className="w-full h-full"
             />
           </div>
