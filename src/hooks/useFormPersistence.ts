@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface FormData {
@@ -21,6 +21,16 @@ const SPREADSHEET_ID = '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8';
 export const useFormPersistence = () => {
   const [recordId, setRecordId] = useState<string | null>(null);
   const [sheetRowId, setSheetRowId] = useState<number | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Recuperar IDs do localStorage ao inicializar
+  useEffect(() => {
+    const savedRecordId = localStorage.getItem('formRecordId');
+    const savedSheetRowId = localStorage.getItem('formSheetRowId');
+    
+    if (savedRecordId) setRecordId(savedRecordId);
+    if (savedSheetRowId) setSheetRowId(parseInt(savedSheetRowId));
+  }, []);
 
   const formatDataForSheets = (formData: FormData, step: number, isComplete: boolean) => {
     return [
@@ -59,7 +69,10 @@ export const useFormPersistence = () => {
       if (!sheetRowId && data?.result?.updates?.updatedRange) {
         const match = data.result.updates.updatedRange.match(/A(\d+)/);
         if (match) {
-          setSheetRowId(parseInt(match[1]));
+          const rowId = parseInt(match[1]);
+          setSheetRowId(rowId);
+          // Salvar no localStorage
+          localStorage.setItem('formSheetRowId', rowId.toString());
         }
       }
       
@@ -70,6 +83,7 @@ export const useFormPersistence = () => {
   };
 
   const saveProgress = async (formData: FormData, step: number) => {
+    setIsSaving(true);
     try {
       // Salvar no Supabase
       if (recordId) {
@@ -99,7 +113,11 @@ export const useFormPersistence = () => {
           .single();
         
         if (error) throw error;
-        if (data) setRecordId(data.id);
+        if (data) {
+          setRecordId(data.id);
+          // Salvar no localStorage
+          localStorage.setItem('formRecordId', data.id);
+        }
       }
 
       // Sincronizar com Google Sheets
@@ -107,6 +125,8 @@ export const useFormPersistence = () => {
     } catch (error) {
       console.error('Error saving progress:', error);
       throw error;
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -155,5 +175,5 @@ export const useFormPersistence = () => {
     }
   };
 
-  return { saveProgress, completeForm };
+  return { saveProgress, completeForm, isSaving };
 };
