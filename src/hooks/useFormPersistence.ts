@@ -134,41 +134,72 @@ export const useFormPersistence = () => {
     try {
       // Atualizar status para completo
       if (recordId) {
-        const { error: updateError } = await supabase
+        const { error } = await supabase
           .from('aplicacoes_mentoria')
           .update({ 
-            status: 'completo',
-            ...formData,
-            dificuldade: formData.dificuldade === 'Outro' 
-              ? formData.outraDificuldade 
-              : formData.dificuldade,
+            status: 'Completo',
+            data_agendamento: formData.data_agendamento,
+            horario_agendamento: formData.horario_agendamento
           })
           .eq('id', recordId);
         
-        if (updateError) throw updateError;
+        if (error) throw error;
       }
 
-      // Criar agendamento
+      // Criar agendamento na tabela de agendamentos
       const { error: agendamentoError } = await supabase
         .from('agendamentos')
-        .insert([{
-          data_agendamento: formData.data_agendamento,
-          horario_agendamento: formData.horario_agendamento,
+        .insert({
           nome_cliente: formData.nome,
           email_cliente: formData.email,
           telefone_cliente: formData.telefone,
-        }]);
-      
+          data_agendamento: formData.data_agendamento!,
+          horario_agendamento: formData.horario_agendamento!,
+          status: 'Completo'
+        });
+
       if (agendamentoError) {
-        // Se horário já está ocupado, avisar usuário
         if (agendamentoError.code === '23505') {
-          throw new Error('Este horário já foi reservado. Por favor, escolha outro horário.');
+          throw new Error('Este horário já está agendado. Por favor, escolha outro horário.');
         }
         throw agendamentoError;
       }
 
-      // Atualizar Google Sheets com status completo
-      await syncWithSheets(formData, 11, true);
+      // Criar evento no Google Calendar
+      try {
+        const { error: calendarError } = await supabase.functions.invoke('create-calendar-event', {
+          body: {
+            clientName: formData.nome,
+            clientEmail: formData.email,
+            clientPhone: formData.telefone,
+            date: formData.data_agendamento,
+            time: formData.horario_agendamento,
+            formData: {
+              nicho: formData.nicho,
+              cargo: formData.cargo,
+              faturamento: formData.faturamento,
+              dificuldade: formData.dificuldade,
+              investimento: formData.investimento
+            }
+          }
+        });
+
+        if (calendarError) {
+          console.error('Error creating calendar event:', calendarError);
+          // Não falhar o fluxo completo se o Calendar falhar
+          // O agendamento já foi salvo no Supabase
+        }
+      } catch (calendarError) {
+        console.error('Error calling calendar function:', calendarError);
+        // Continuar mesmo se o Calendar falhar
+      }
+
+      // Sincronizar com Google Sheets com status completo
+      await syncWithSheets(formData, 12, true);
+      
+      // Limpar localStorage após conclusão
+      localStorage.removeItem('formRecordId');
+      localStorage.removeItem('formSheetRowId');
     } catch (error) {
       console.error('Error completing form:', error);
       throw error;
