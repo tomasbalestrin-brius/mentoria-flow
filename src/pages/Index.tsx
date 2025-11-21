@@ -474,6 +474,7 @@ const Index = () => {
         'Estou preso demais na operação e não consigo focar no crescimento.',
         'Meu negócio até cresce, mas sem estrutura, equipe ou processos sólidos.',
         'Não tenho clareza dos números e isso trava minhas decisões.',
+        'Meu negócio cresce, mas quero multiplicar com mais método e previsibilidade.',
         'Outro'
       ];
       return (
