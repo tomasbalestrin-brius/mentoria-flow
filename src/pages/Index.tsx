@@ -686,7 +686,7 @@ const Index = () => {
           </p>
           
           <p className="text-primary font-semibold text-center text-base md:text-lg">
-            Entraremos em contato via link do Google Meet.
+            Entraremos em contato via WhatsApp em vídeo.
           </p>
 
           {/* Vídeo do YouTube */}
