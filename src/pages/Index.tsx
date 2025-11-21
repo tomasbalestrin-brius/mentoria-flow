@@ -33,7 +33,7 @@ const Index = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [datesWithTimes, setDatesWithTimes] = useState<Map<string, string[]>>(new Map());
   
-  const { saveProgress, completeForm } = useFormPersistence();
+  const { saveProgress, completeForm, isSaving } = useFormPersistence();
 
   useEffect(() => {
     // Gerar apenas hoje e amanhã e filtrar apenas os que têm horários
@@ -96,6 +96,37 @@ const Index = () => {
       }
     }
   }, [formData.data_agendamento, datesWithTimes]);
+
+  // Auto-save com debounce - salvar automaticamente após 3 segundos de inatividade
+  useEffect(() => {
+    // Só fazer auto-save se houver algum dado preenchido
+    const hasData = formData.nome || formData.telefone || formData.email;
+    if (!hasData) return;
+
+    const timeoutId = setTimeout(() => {
+      saveProgress(formData, step).catch(error => {
+        console.error('Auto-save failed:', error);
+      });
+    }, 3000); // 3 segundos de debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [formData, step]);
+
+  // Captura ao sair da página - salvar antes de fechar
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const hasData = formData.nome || formData.telefone || formData.email;
+      if (hasData && !isSubmitting) {
+        // Tentar salvar de forma síncrona usando sendBeacon se possível
+        saveProgress(formData, step).catch(error => {
+          console.error('Save on exit failed:', error);
+        });
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [formData, step, isSubmitting]);
 
   const fetchAvailableTimes = async (date: string) => {
     try {
@@ -753,6 +784,15 @@ const Index = () => {
               >
                 {step === 11 ? (isSubmitting ? 'Confirmando...' : 'Confirmar Agendamento') : 'Continuar'}
               </button>
+            </div>
+          )}
+          
+          {/* Indicador de auto-save */}
+          {isSaving && step < 12 && (
+            <div className="mt-4 text-center">
+              <p className="text-xs md:text-sm text-muted-foreground">
+                Salvando automaticamente...
+              </p>
             </div>
           )}
         </div>
