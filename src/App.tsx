@@ -25,7 +25,7 @@ const App = () => (
           
           {/* Formulários individuais */}
           <Route path="/bio" element={<FormPage formType="bio" />} />
-          <Route path="/matematica" element={<FormPage formType="matematica" />} />
+          <Route path="/feed-cleiton-querobin" element={<FormPage formType="feed-cleiton-querobin" />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
