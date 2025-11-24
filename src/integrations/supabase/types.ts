@@ -24,6 +24,7 @@ export type Database = {
           nome_cliente: string | null
           status: string | null
           telefone_cliente: string | null
+          tipo_formulario: string | null
         }
         Insert: {
           created_at?: string | null
@@ -34,6 +35,7 @@ export type Database = {
           nome_cliente?: string | null
           status?: string | null
           telefone_cliente?: string | null
+          tipo_formulario?: string | null
         }
         Update: {
           created_at?: string | null
@@ -44,6 +46,7 @@ export type Database = {
           nome_cliente?: string | null
           status?: string | null
           telefone_cliente?: string | null
+          tipo_formulario?: string | null
         }
         Relationships: []
       }
@@ -64,6 +67,7 @@ export type Database = {
           sheet_row_id: number | null
           status: string | null
           telefone: string | null
+          tipo_formulario: string | null
           ultima_pergunta: number | null
           updated_at: string | null
         }
@@ -83,6 +87,7 @@ export type Database = {
           sheet_row_id?: number | null
           status?: string | null
           telefone?: string | null
+          tipo_formulario?: string | null
           ultima_pergunta?: number | null
           updated_at?: string | null
         }
@@ -102,6 +107,7 @@ export type Database = {
           sheet_row_id?: number | null
           status?: string | null
           telefone?: string | null
+          tipo_formulario?: string | null
           ultima_pergunta?: number | null
           updated_at?: string | null
         }
