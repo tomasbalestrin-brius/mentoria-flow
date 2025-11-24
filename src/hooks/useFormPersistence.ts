@@ -63,11 +63,21 @@ export const useFormPersistence = (formType: string = 'bio') => {
     try {
       const values = formatDataForSheets(formData, step, isComplete);
       
+      // Verificar localStorage diretamente para valor mais recente do sheetRowId
+      const currentSheetRowId = sheetRowIdRef.current || 
+        (localStorage.getItem(`formSheetRowId_${formType}`) 
+          ? parseInt(localStorage.getItem(`formSheetRowId_${formType}`)!) 
+          : null);
+      
+      // Só usar rowId se também temos recordId (indicando continuação do mesmo formulário)
+      const currentRecordId = recordIdRef.current || localStorage.getItem(`formRecordId_${formType}`);
+      const rowIdToUse = currentRecordId ? currentSheetRowId : null;
+      
       const { data, error } = await supabase.functions.invoke('sheets-sync', {
         body: {
           values,
           spreadsheetId: spreadsheetId,
-          rowId: sheetRowIdRef.current,
+          rowId: rowIdToUse,
           sheetName: 'Base'
         }
       });
@@ -126,6 +136,10 @@ export const useFormPersistence = (formType: string = 'bio') => {
         if (error) throw error;
         recordIdRef.current = currentRecordId;
       } else {
+        // Limpar sheetRowId - novo formulário = nova linha na planilha
+        sheetRowIdRef.current = null;
+        localStorage.removeItem(`formSheetRowId_${formType}`);
+        
         const { data, error } = await supabase
           .from('aplicacoes_mentoria')
           .insert([finalData])
