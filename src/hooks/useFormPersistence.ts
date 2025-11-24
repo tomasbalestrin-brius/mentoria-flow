@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface FormData {
@@ -22,9 +22,12 @@ const SPREADSHEET_IDS: Record<string, string> = {
 };
 
 export const useFormPersistence = (formType: string = 'bio') => {
-  const [recordId, setRecordId] = useState<string | null>(null);
-  const [sheetRowId, setSheetRowId] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Usar useRef para evitar race conditions
+  const recordIdRef = useRef<string | null>(null);
+  const sheetRowIdRef = useRef<number | null>(null);
+  const saveLockRef = useRef<boolean>(false);
   
   const spreadsheetId = SPREADSHEET_IDS[formType] || SPREADSHEET_IDS['bio'];
 
@@ -33,8 +36,8 @@ export const useFormPersistence = (formType: string = 'bio') => {
     const savedRecordId = localStorage.getItem(`formRecordId_${formType}`);
     const savedSheetRowId = localStorage.getItem(`formSheetRowId_${formType}`);
     
-    if (savedRecordId) setRecordId(savedRecordId);
-    if (savedSheetRowId) setSheetRowId(parseInt(savedSheetRowId));
+    if (savedRecordId) recordIdRef.current = savedRecordId;
+    if (savedSheetRowId) sheetRowIdRef.current = parseInt(savedSheetRowId);
   }, [formType]);
 
   const formatDataForSheets = (formData: FormData, step: number, isComplete: boolean) => {
@@ -64,18 +67,18 @@ export const useFormPersistence = (formType: string = 'bio') => {
         body: {
           values,
           spreadsheetId: spreadsheetId,
-          rowId: sheetRowId
+          rowId: sheetRowIdRef.current
         }
       });
 
       if (error) throw error;
       
       // Se foi uma nova inserção, guardar o row ID
-      if (!sheetRowId && data?.result?.updates?.updatedRange) {
+      if (!sheetRowIdRef.current && data?.result?.updates?.updatedRange) {
         const match = data.result.updates.updatedRange.match(/A(\d+)/);
         if (match) {
           const rowId = parseInt(match[1]);
-          setSheetRowId(rowId);
+          sheetRowIdRef.current = rowId;
           // Salvar no localStorage (isolado por tipo)
           localStorage.setItem(`formSheetRowId_${formType}`, rowId.toString());
         }
@@ -88,8 +91,19 @@ export const useFormPersistence = (formType: string = 'bio') => {
   };
 
   const saveProgress = async (formData: FormData, step: number) => {
+    // Evitar chamadas paralelas usando lock
+    if (saveLockRef.current) {
+      console.log('Save already in progress, skipping...');
+      return;
+    }
+    
+    saveLockRef.current = true;
     setIsSaving(true);
+    
     try {
+      // Verificar localStorage diretamente para garantir valor mais recente
+      const currentRecordId = recordIdRef.current || localStorage.getItem(`formRecordId_${formType}`);
+      
       // Preparar dados sem outraDificuldade (que não existe como coluna)
       const { outraDificuldade, ...dataToSave } = formData;
       const finalData = {
@@ -102,13 +116,14 @@ export const useFormPersistence = (formType: string = 'bio') => {
       };
 
       // Salvar no Supabase
-      if (recordId) {
+      if (currentRecordId) {
         const { error } = await supabase
           .from('aplicacoes_mentoria')
           .update(finalData)
-          .eq('id', recordId);
+          .eq('id', currentRecordId);
         
         if (error) throw error;
+        recordIdRef.current = currentRecordId;
       } else {
         const { data, error } = await supabase
           .from('aplicacoes_mentoria')
@@ -118,7 +133,7 @@ export const useFormPersistence = (formType: string = 'bio') => {
         
         if (error) throw error;
         if (data) {
-          setRecordId(data.id);
+          recordIdRef.current = data.id;
           // Salvar no localStorage (isolado por tipo)
           localStorage.setItem(`formRecordId_${formType}`, data.id);
         }
@@ -131,6 +146,7 @@ export const useFormPersistence = (formType: string = 'bio') => {
       throw error;
     } finally {
       setIsSaving(false);
+      saveLockRef.current = false;
     }
   };
 
@@ -155,7 +171,8 @@ export const useFormPersistence = (formType: string = 'bio') => {
       }
 
       // Atualizar status para completo
-      if (recordId) {
+      const currentRecordId = recordIdRef.current || localStorage.getItem(`formRecordId_${formType}`);
+      if (currentRecordId) {
         const { error } = await supabase
           .from('aplicacoes_mentoria')
           .update({ 
@@ -164,7 +181,7 @@ export const useFormPersistence = (formType: string = 'bio') => {
             horario_agendamento: formData.horario_agendamento,
             tipo_formulario: formType,
           })
-          .eq('id', recordId);
+          .eq('id', currentRecordId);
         
         if (error) throw error;
       }

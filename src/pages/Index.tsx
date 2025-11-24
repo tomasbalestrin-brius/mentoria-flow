@@ -118,6 +118,9 @@ const Index = () => {
 
   // Auto-save com debounce - salvar automaticamente após 3 segundos de inatividade
   useEffect(() => {
+    // Não fazer auto-save durante submissão
+    if (isSubmitting) return;
+    
     // Só fazer auto-save se houver algum dado preenchido
     const hasData = formData.nome || formData.telefone || formData.email;
     if (!hasData) return;
@@ -129,7 +132,7 @@ const Index = () => {
     }, 3000); // 3 segundos de debounce
 
     return () => clearTimeout(timeoutId);
-  }, [formData, step]);
+  }, [formData, step, isSubmitting]);
 
   // Captura ao sair da página - salvar antes de fechar
   useEffect(() => {
