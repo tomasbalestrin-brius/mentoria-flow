@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { values, spreadsheetId, rowId } = await req.json();
+    const { values, spreadsheetId, rowId, sheetName = 'Base' } = await req.json();
     
     const serviceAccountKey = Deno.env.get('GOOGLE_SERVICE_ACCOUNT_KEY');
     if (!serviceAccountKey) {
@@ -75,8 +75,8 @@ serve(async (req) => {
 
     // Atualizar ou adicionar no Google Sheets
     const sheetsUrl = rowId 
-      ? `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A${rowId}:N${rowId}?valueInputOption=USER_ENTERED`
-      : `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A:N:append?valueInputOption=USER_ENTERED`;
+      ? `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A${rowId}:N${rowId}?valueInputOption=USER_ENTERED`
+      : `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A:N:append?valueInputOption=USER_ENTERED`;
 
     const method = rowId ? 'PUT' : 'POST';
     
