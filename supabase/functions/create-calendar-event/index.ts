@@ -124,18 +124,12 @@ serve(async (req) => {
           { method: 'email', minutes: 24 * 60 }, // 1 dia antes
           { method: 'popup', minutes: 60 }, // 1 hora antes
         ],
-      },
-      conferenceData: {
-        createRequest: {
-          requestId: `mentoria-${Date.now()}`,
-          conferenceSolutionKey: { type: 'hangoutsMeet' }
-        }
       }
     };
 
-    // Criar evento no calendário - Service Accounts não podem adicionar participantes sem Domain-Wide Delegation
+    // Criar evento no calendário
     const calendarResponse = await fetch(
-      'https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1',
+      'https://www.googleapis.com/calendar/v3/calendars/primary/events',
       {
         method: 'POST',
         headers: {
@@ -159,8 +153,7 @@ serve(async (req) => {
       JSON.stringify({ 
         success: true, 
         eventId: result.id,
-        htmlLink: result.htmlLink,
-        hangoutLink: result.hangoutLink
+        htmlLink: result.htmlLink
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
