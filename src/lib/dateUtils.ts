@@ -58,9 +58,15 @@ export const filterAvailableTimes = (
   const now = new Date();
   const isToday = formatDateForDB(selectedDate) === formatDateForDB(now);
   
+  // Normalizar horários agendados para formato HH:MM (caso venham como HH:MM:SS)
+  const normalizedBooked = bookedTimes.map(time => {
+    // Se o formato for HH:MM:SS, extrair apenas HH:MM
+    return time.length > 5 ? time.substring(0, 5) : time;
+  });
+  
   return times.filter(time => {
     // Remove horários já agendados
-    if (bookedTimes.includes(time)) return false;
+    if (normalizedBooked.includes(time)) return false;
     
     // Se for hoje, remove horários que já passaram
     if (isToday) {

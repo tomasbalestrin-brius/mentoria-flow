@@ -68,10 +68,15 @@ const Index = () => {
               bookedTimes = [];
             }
           } else {
-            bookedTimes = supabaseData?.map(a => a.horario_agendamento) || [];
+            // Normalizar formato HH:MM:SS para HH:MM removendo os segundos
+            bookedTimes = supabaseData?.map(a => {
+              const time = a.horario_agendamento || '';
+              return time.substring(0, 5); // Remove segundos se existirem
+            }).filter(Boolean) || [];
           }
           
-          console.log(`Booked times for ${dateStr} from Supabase:`, bookedTimes);
+          console.log(`Raw booked times from Supabase:`, supabaseData?.map(a => a.horario_agendamento));
+          console.log(`Normalized booked times for ${dateStr}:`, bookedTimes);
           const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, date);
           
           // Apenas adicionar datas que tenham horários disponíveis
@@ -186,10 +191,15 @@ const Index = () => {
           bookedTimes = [];
         }
       } else {
-        bookedTimes = supabaseData.map(a => a.horario_agendamento);
+        // Normalizar formato HH:MM:SS para HH:MM removendo os segundos
+        bookedTimes = supabaseData.map(a => {
+          const time = a.horario_agendamento || '';
+          return time.substring(0, 5); // Remove segundos se existirem
+        }).filter(Boolean);
       }
       
-      console.log('Booked times from database:', bookedTimes);
+      console.log('Raw booked times from database:', supabaseData?.map(a => a.horario_agendamento));
+      console.log('Normalized booked times:', bookedTimes);
       const selectedDate = new Date(date + 'T00:00:00');
       const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, selectedDate);
       console.log('Available times after filtering:', filtered);
