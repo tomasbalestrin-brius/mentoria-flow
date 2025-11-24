@@ -85,30 +85,28 @@ export const useFormPersistence = () => {
   const saveProgress = async (formData: FormData, step: number) => {
     setIsSaving(true);
     try {
+      // Preparar dados sem outraDificuldade (que não existe como coluna)
+      const { outraDificuldade, ...dataToSave } = formData;
+      const finalData = {
+        ...dataToSave,
+        dificuldade: formData.dificuldade === 'Outro' 
+          ? formData.outraDificuldade 
+          : formData.dificuldade,
+        ultima_pergunta: step,
+      };
+
       // Salvar no Supabase
       if (recordId) {
         const { error } = await supabase
           .from('aplicacoes_mentoria')
-          .update({
-            ...formData,
-            dificuldade: formData.dificuldade === 'Outro' 
-              ? formData.outraDificuldade 
-              : formData.dificuldade,
-            ultima_pergunta: step,
-          })
+          .update(finalData)
           .eq('id', recordId);
         
         if (error) throw error;
       } else {
         const { data, error } = await supabase
           .from('aplicacoes_mentoria')
-          .insert([{
-            ...formData,
-            dificuldade: formData.dificuldade === 'Outro' 
-              ? formData.outraDificuldade 
-              : formData.dificuldade,
-            ultima_pergunta: step,
-          }])
+          .insert([finalData])
           .select()
           .single();
         
