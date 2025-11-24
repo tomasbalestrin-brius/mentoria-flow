@@ -46,26 +46,32 @@ const Index = () => {
       for (const date of dates) {
         const dateStr = formatDateForDB(date);
         try {
-          // Buscar horários ocupados
-          const { data: sheetData, error: sheetError } = await supabase.functions.invoke('get-booked-times', {
-            body: {
-              date: dateStr,
-              spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
-            }
-          });
-
+          // PRIORIDADE 1: Buscar do Supabase (fonte confiável)
           let bookedTimes: string[] = [];
-          if (sheetError) {
-            // Fallback para Supabase
-            const { data: supabaseData } = await supabase
-              .from('agendamentos')
-              .select('horario_agendamento')
-              .eq('data_agendamento', dateStr);
-            bookedTimes = supabaseData?.map(a => a.horario_agendamento) || [];
+          const { data: supabaseData, error: supabaseError } = await supabase
+            .from('agendamentos')
+            .select('horario_agendamento')
+            .eq('data_agendamento', dateStr);
+          
+          if (supabaseError) {
+            console.error('Supabase error, trying Google Sheets:', supabaseError);
+            // Fallback para Google Sheets apenas se Supabase falhar
+            try {
+              const { data: sheetData } = await supabase.functions.invoke('get-booked-times', {
+                body: {
+                  date: dateStr,
+                  spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
+                }
+              });
+              bookedTimes = sheetData?.bookedTimes || [];
+            } catch {
+              bookedTimes = [];
+            }
           } else {
-            bookedTimes = sheetData?.bookedTimes || [];
+            bookedTimes = supabaseData?.map(a => a.horario_agendamento) || [];
           }
           
+          console.log(`Booked times for ${dateStr} from Supabase:`, bookedTimes);
           const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, date);
           
           // Apenas adicionar datas que tenham horários disponíveis
@@ -88,15 +94,22 @@ const Index = () => {
   useEffect(() => {
     // Buscar horários disponíveis quando uma data for selecionada
     if (formData.data_agendamento) {
-      // Usar horários do cache se disponível
-      const cachedTimes = datesWithTimes.get(formData.data_agendamento);
-      if (cachedTimes) {
-        setAvailableTimes(cachedTimes);
-      } else {
-        fetchAvailableTimes(formData.data_agendamento);
-      }
+      fetchAvailableTimes(formData.data_agendamento);
     }
-  }, [formData.data_agendamento, datesWithTimes]);
+  }, [formData.data_agendamento]);
+
+  // Polling para atualizar horários disponíveis em tempo real
+  useEffect(() => {
+    // Apenas atualizar quando estiver nas etapas de seleção de data/horário
+    if ((step === 10 || step === 11) && formData.data_agendamento) {
+      const intervalId = setInterval(() => {
+        console.log('Refreshing available times...');
+        fetchAvailableTimes(formData.data_agendamento);
+      }, 30000); // Atualizar a cada 30 segundos
+
+      return () => clearInterval(intervalId);
+    }
+  }, [step, formData.data_agendamento]);
 
   // Auto-save com debounce - salvar automaticamente após 3 segundos de inatividade
   useEffect(() => {
@@ -147,33 +160,39 @@ const Index = () => {
 
   const fetchAvailableTimes = async (date: string) => {
     try {
-      // Buscar horários ocupados da planilha Google Sheets
-      const { data: sheetData, error: sheetError } = await supabase.functions.invoke('get-booked-times', {
-        body: {
-          date,
-          spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
+      console.log('Fetching available times for:', date);
+      
+      // PRIORIDADE 1: Buscar do Supabase (fonte confiável)
+      const { data: supabaseData, error: supabaseError } = await supabase
+        .from('agendamentos')
+        .select('horario_agendamento')
+        .eq('data_agendamento', date);
+      
+      let bookedTimes: string[] = [];
+      
+      if (supabaseError) {
+        console.error('Supabase error, trying Google Sheets:', supabaseError);
+        // Fallback para Google Sheets apenas se Supabase falhar
+        try {
+          const { data: sheetData } = await supabase.functions.invoke('get-booked-times', {
+            body: {
+              date,
+              spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
+            }
+          });
+          bookedTimes = sheetData?.bookedTimes || [];
+        } catch (sheetError) {
+          console.error('Google Sheets also failed:', sheetError);
+          bookedTimes = [];
         }
-      });
-
-      if (sheetError) {
-        console.error('Error fetching from sheets:', sheetError);
-        // Se falhar, tentar do Supabase
-        const { data: supabaseData, error: supabaseError } = await supabase
-          .from('agendamentos')
-          .select('horario_agendamento')
-          .eq('data_agendamento', date);
-        
-        if (supabaseError) throw supabaseError;
-        const bookedTimes = supabaseData.map(a => a.horario_agendamento);
-        const selectedDate = new Date(date + 'T00:00:00');
-        const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, selectedDate);
-        setAvailableTimes(filtered);
-        return;
+      } else {
+        bookedTimes = supabaseData.map(a => a.horario_agendamento);
       }
       
-      const bookedTimes = sheetData?.bookedTimes || [];
+      console.log('Booked times from database:', bookedTimes);
       const selectedDate = new Date(date + 'T00:00:00');
       const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, selectedDate);
+      console.log('Available times after filtering:', filtered);
       setAvailableTimes(filtered);
     } catch (error) {
       console.error('Error fetching available times:', error);
@@ -294,10 +313,14 @@ const Index = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
       console.error('Error completing form:', error);
-      if (error.message.includes('horário já foi reservado')) {
-        setError(error.message);
+      if (error.message.includes('horário já')) {
+        // Atualizar lista de horários e mostrar erro claro
+        await fetchAvailableTimes(formData.data_agendamento);
+        setError('Este horário foi agendado enquanto você preenchia o formulário. Por favor, escolha outro horário.');
         setStep(11); // Voltar para seleção de horário
+        toast.error('Horário indisponível. Por favor, escolha outro horário.');
       } else {
+        setError('Erro ao finalizar aplicação. Tente novamente.');
         toast.error('Erro ao finalizar aplicação. Tente novamente.');
       }
     } finally {

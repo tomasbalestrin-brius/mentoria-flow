@@ -130,6 +130,23 @@ export const useFormPersistence = () => {
 
   const completeForm = async (formData: FormData) => {
     try {
+      // VALIDAÇÃO: Verificar se o horário ainda está disponível antes de tentar agendar
+      console.log('Validating time slot availability...');
+      const { data: existingBooking, error: checkError } = await supabase
+        .from('agendamentos')
+        .select('id')
+        .eq('data_agendamento', formData.data_agendamento)
+        .eq('horario_agendamento', formData.horario_agendamento)
+        .maybeSingle();
+
+      if (checkError) {
+        console.error('Error checking availability:', checkError);
+      }
+
+      if (existingBooking) {
+        throw new Error('Este horário já está agendado. Por favor, escolha outro horário.');
+      }
+
       // Atualizar status para completo
       if (recordId) {
         const { error } = await supabase
