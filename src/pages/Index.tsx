@@ -721,17 +721,19 @@ const Index = () => {
             Entraremos em contato via WhatsApp em vídeo.
           </p>
 
-          {/* Vídeo do YouTube */}
-          <div className="aspect-video bg-secondary/30 border border-border rounded-lg overflow-hidden">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/IiUbOztFW7o?autoplay=1&mute=1&modestbranding=1&rel=0&controls=1&showinfo=0&iv_load_policy=3&playsinline=1"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              className="w-full h-full"
-            />
+          {/* Vídeo Smartplayer */}
+          <div className="bg-secondary/30 border border-border rounded-lg overflow-hidden p-2">
+            <div dangerouslySetInnerHTML={{
+              __html: `
+                <vturb-smartplayer id="vid-692066657cc713fc76f626ec" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>
+                <script type="text/javascript">
+                  var s=document.createElement("script");
+                  s.src="https://scripts.converteai.net/60c57e38-903d-4b8c-afdb-955793042b17/players/692066657cc713fc76f626ec/v4/player.js";
+                  s.async=true;
+                  document.head.appendChild(s);
+                </script>
+              `
+            }} />
           </div>
 
           {/* Botão CTA */}
