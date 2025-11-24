@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FormHeader } from '@/components/FormHeader';
 import { useFormPersistence, FormData } from '@/hooks/useFormPersistence';
 import { supabase } from '@/integrations/supabase/client';
@@ -32,6 +32,7 @@ const Index = () => {
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [datesWithTimes, setDatesWithTimes] = useState<Map<string, string[]>>(new Map());
+  const videoContainerRef = useRef<HTMLDivElement>(null);
   
   const { saveProgress, completeForm, isSaving } = useFormPersistence();
 
@@ -127,6 +128,22 @@ const Index = () => {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [formData, step, isSubmitting]);
+
+  // Carregar script do Smartplayer quando chegar na página de agradecimento
+  useEffect(() => {
+    if (step === 12 && videoContainerRef.current) {
+      // Verificar se o script já foi carregado
+      const existingScript = document.getElementById('smartplayer-script');
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.id = 'smartplayer-script';
+        script.src = 'https://scripts.converteai.net/60c57e38-903d-4b8c-afdb-955793042b17/players/692066657cc713fc76f626ec/v4/player.js';
+        script.async = true;
+        document.head.appendChild(script);
+        console.log('Smartplayer script loaded');
+      }
+    }
+  }, [step]);
 
   const fetchAvailableTimes = async (date: string) => {
     try {
@@ -722,19 +739,13 @@ const Index = () => {
           </p>
 
           {/* Vídeo Smartplayer */}
-          <div className="bg-secondary/30 border border-border rounded-lg overflow-hidden p-2">
-            <div dangerouslySetInnerHTML={{
-              __html: `
-                <vturb-smartplayer id="vid-692066657cc713fc76f626ec" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>
-                <script type="text/javascript">
-                  var s=document.createElement("script");
-                  s.src="https://scripts.converteai.net/60c57e38-903d-4b8c-afdb-955793042b17/players/692066657cc713fc76f626ec/v4/player.js";
-                  s.async=true;
-                  document.head.appendChild(s);
-                </script>
-              `
-            }} />
-          </div>
+          <div 
+            ref={videoContainerRef}
+            className="bg-secondary/30 border border-border rounded-lg overflow-hidden p-2"
+            dangerouslySetInnerHTML={{
+              __html: '<vturb-smartplayer id="vid-692066657cc713fc76f626ec" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>'
+            }}
+          />
 
           {/* Botão CTA */}
           <div className="text-center pt-2 md:pt-4">
