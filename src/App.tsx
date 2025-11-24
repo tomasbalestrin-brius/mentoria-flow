@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import FormPage from "./pages/FormPage";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
@@ -22,10 +21,6 @@ const App = () => (
           
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />
-          
-          {/* Formulários individuais */}
-          <Route path="/bio" element={<FormPage formType="bio" />} />
-          <Route path="/feed-cleiton-querobin" element={<FormPage formType="feed-cleiton-querobin" />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
