@@ -67,7 +67,8 @@ export const useFormPersistence = (formType: string = 'bio') => {
         body: {
           values,
           spreadsheetId: spreadsheetId,
-          rowId: sheetRowIdRef.current
+          rowId: sheetRowIdRef.current,
+          sheetName: 'Base'
         }
       });
 
