@@ -18,19 +18,19 @@ export interface FormData {
 
 const SPREADSHEET_ID = '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8';
 
-export const useFormPersistence = () => {
+export const useFormPersistence = (formType: string = 'bio') => {
   const [recordId, setRecordId] = useState<string | null>(null);
   const [sheetRowId, setSheetRowId] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Recuperar IDs do localStorage ao inicializar
+  // Recuperar IDs do localStorage ao inicializar (isolado por tipo de formulário)
   useEffect(() => {
-    const savedRecordId = localStorage.getItem('formRecordId');
-    const savedSheetRowId = localStorage.getItem('formSheetRowId');
+    const savedRecordId = localStorage.getItem(`formRecordId_${formType}`);
+    const savedSheetRowId = localStorage.getItem(`formSheetRowId_${formType}`);
     
     if (savedRecordId) setRecordId(savedRecordId);
     if (savedSheetRowId) setSheetRowId(parseInt(savedSheetRowId));
-  }, []);
+  }, [formType]);
 
   const formatDataForSheets = (formData: FormData, step: number, isComplete: boolean) => {
     return [
@@ -71,8 +71,8 @@ export const useFormPersistence = () => {
         if (match) {
           const rowId = parseInt(match[1]);
           setSheetRowId(rowId);
-          // Salvar no localStorage
-          localStorage.setItem('formSheetRowId', rowId.toString());
+          // Salvar no localStorage (isolado por tipo)
+          localStorage.setItem(`formSheetRowId_${formType}`, rowId.toString());
         }
       }
       
@@ -93,6 +93,7 @@ export const useFormPersistence = () => {
           ? formData.outraDificuldade 
           : formData.dificuldade,
         ultima_pergunta: step,
+        tipo_formulario: formType,
       };
 
       // Salvar no Supabase
@@ -113,8 +114,8 @@ export const useFormPersistence = () => {
         if (error) throw error;
         if (data) {
           setRecordId(data.id);
-          // Salvar no localStorage
-          localStorage.setItem('formRecordId', data.id);
+          // Salvar no localStorage (isolado por tipo)
+          localStorage.setItem(`formRecordId_${formType}`, data.id);
         }
       }
 
@@ -137,6 +138,7 @@ export const useFormPersistence = () => {
         .select('id')
         .eq('data_agendamento', formData.data_agendamento)
         .eq('horario_agendamento', formData.horario_agendamento)
+        .eq('tipo_formulario', formType)
         .maybeSingle();
 
       if (checkError) {
@@ -154,7 +156,8 @@ export const useFormPersistence = () => {
           .update({ 
             status: 'Completo',
             data_agendamento: formData.data_agendamento,
-            horario_agendamento: formData.horario_agendamento
+            horario_agendamento: formData.horario_agendamento,
+            tipo_formulario: formType,
           })
           .eq('id', recordId);
         
@@ -170,7 +173,8 @@ export const useFormPersistence = () => {
           telefone_cliente: formData.telefone,
           data_agendamento: formData.data_agendamento!,
           horario_agendamento: formData.horario_agendamento!,
-          status: 'Completo'
+          status: 'Completo',
+          tipo_formulario: formType,
         });
 
       if (agendamentoError) {
@@ -212,9 +216,9 @@ export const useFormPersistence = () => {
       // Sincronizar com Google Sheets com status completo
       await syncWithSheets(formData, 12, true);
       
-      // Limpar localStorage após conclusão
-      localStorage.removeItem('formRecordId');
-      localStorage.removeItem('formSheetRowId');
+      // Limpar localStorage após conclusão (isolado por tipo)
+      localStorage.removeItem(`formRecordId_${formType}`);
+      localStorage.removeItem(`formSheetRowId_${formType}`);
     } catch (error) {
       console.error('Error completing form:', error);
       throw error;
