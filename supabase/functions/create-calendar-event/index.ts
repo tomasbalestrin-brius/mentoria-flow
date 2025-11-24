@@ -118,9 +118,6 @@ serve(async (req) => {
         dateTime: endDateTime.toISOString(),
         timeZone: 'America/Sao_Paulo',
       },
-      attendees: [
-        { email: clientEmail, responseStatus: 'needsAction' }
-      ],
       reminders: {
         useDefault: false,
         overrides: [
@@ -136,9 +133,9 @@ serve(async (req) => {
       }
     };
 
-    // Criar evento no calendário primário
+    // Criar evento no calendário - Service Accounts não podem adicionar participantes sem Domain-Wide Delegation
     const calendarResponse = await fetch(
-      'https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=all',
+      'https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1',
       {
         method: 'POST',
         headers: {
