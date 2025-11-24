@@ -28,4 +28,31 @@ export interface FormConfig {
   };
 }
 
-export const formConfigs: Record<string, FormConfig> = {};
+export const formConfigs: Record<string, FormConfig> = {
+  'bio': {
+    id: 'bio',
+    title: 'Formulário Bio',
+    description: 'Aplicação para Mentoria',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
+    }
+  },
+  'feed-cleiton-querobin': {
+    id: 'feed-cleiton-querobin',
+    title: 'Feed Cleiton Querobin',
+    description: 'Aplicação para Mentoria - Feed',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '1i32baM2j8C8V4_zhc4zh0tI0hc5y9istEUGa6UsBdR0'
+    }
+  }
+};
