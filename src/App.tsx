@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import FeedCleitonQuerobin from "./pages/FeedCleitonQuerobin";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
@@ -18,6 +19,9 @@ const App = () => (
         <Routes>
           {/* Rota raiz mantém formulário Bio (comportamento atual) */}
           <Route path="/" element={<Index />} />
+          
+          {/* Feed Cleiton Querobin - Formulário duplicado */}
+          <Route path="/feed-cleiton-querobin" element={<FeedCleitonQuerobin />} />
           
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />

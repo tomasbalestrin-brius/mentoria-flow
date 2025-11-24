@@ -16,12 +16,17 @@ export interface FormData {
   horario_agendamento: string;
 }
 
-const SPREADSHEET_ID = '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8';
+const SPREADSHEET_IDS: Record<string, string> = {
+  'bio': '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8',
+  'feed-cleiton-querobin': '1i32baM2j8C8V4_zhc4zh0tI0hc5y9istEUGa6UsBdR0'
+};
 
 export const useFormPersistence = (formType: string = 'bio') => {
   const [recordId, setRecordId] = useState<string | null>(null);
   const [sheetRowId, setSheetRowId] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  
+  const spreadsheetId = SPREADSHEET_IDS[formType] || SPREADSHEET_IDS['bio'];
 
   // Recuperar IDs do localStorage ao inicializar (isolado por tipo de formulário)
   useEffect(() => {
@@ -58,7 +63,7 @@ export const useFormPersistence = (formType: string = 'bio') => {
       const { data, error } = await supabase.functions.invoke('sheets-sync', {
         body: {
           values,
-          spreadsheetId: SPREADSHEET_ID,
+          spreadsheetId: spreadsheetId,
           rowId: sheetRowId
         }
       });
