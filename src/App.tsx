@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import FeedCleitonQuerobin from "./pages/FeedCleitonQuerobin";
+import StoriesCleitonQuerobin from "./pages/StoriesCleitonQuerobin";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
@@ -22,6 +23,9 @@ const App = () => (
           
           {/* Feed Cleiton Querobin - Formulário duplicado */}
           <Route path="/feed-cleiton-querobin" element={<FeedCleitonQuerobin />} />
+          
+          {/* Stories Cleiton Querobin - Formulário duplicado */}
+          <Route path="/stories-cleiton-querobin" element={<StoriesCleitonQuerobin />} />
           
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />
