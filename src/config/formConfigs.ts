@@ -54,5 +54,18 @@ export const formConfigs: Record<string, FormConfig> = {
     googleSheet: {
       spreadsheetId: '1i32baM2j8C8V4_zhc4zh0tI0hc5y9istEUGa6UsBdR0'
     }
+  },
+  'stories-cleiton-querobin': {
+    id: 'stories-cleiton-querobin',
+    title: 'Stories Cleiton Querobin',
+    description: 'Aplicação para Mentoria - Stories',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '1D8iSRnlwUJAITQfd8zQ8-nKqLtXXNoOGGTCQetjlQF8'
+    }
   }
 };
