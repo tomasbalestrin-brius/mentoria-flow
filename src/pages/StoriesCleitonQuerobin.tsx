@@ -478,20 +478,28 @@ const StoriesCleitonQuerobin = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual o seu cargo?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
             <div className="space-y-3">
               {cargos.map((cargo) => (
-                <button
+                <label
                   key={cargo}
-                  onClick={() => updateField('cargo', cargo)}
-                  className={`w-full px-4 md:px-6 py-3 md:py-4 text-base md:text-lg rounded-lg border-2 transition-all ${
+                  className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                     formData.cargo === cargo
-                      ? 'bg-primary/20 border-primary text-white'
-                      : 'bg-form-input-bg border-form-input-border text-white hover:border-primary/50'
+                      ? 'bg-accent border border-accent-foreground'
+                      : 'bg-secondary border border-border hover:bg-secondary/80'
                   }`}
+                  onClick={() => updateField('cargo', cargo)}
                 >
-                  {cargo}
-                </button>
+                  <input
+                    type="radio"
+                    name="cargo"
+                    value={cargo}
+                    checked={formData.cargo === cargo}
+                    onChange={() => updateField('cargo', cargo)}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span className="text-white text-sm md:text-base">{cargo}</span>
+                </label>
               ))}
             </div>
           </div>
@@ -502,29 +510,39 @@ const StoriesCleitonQuerobin = () => {
     // Pergunta 7 - Faturamento
     if (step === 7) {
       const faturamentos = [
-        'Não fatura ainda',
-        'Entre R$ 1 a R$ 10 mil',
-        'Entre R$ 10 mil e R$ 30 mil',
-        'Entre R$ 30 mil e R$ 100 mil',
-        'Mais de R$ 100 mil'
+        'Ainda não fatura',
+        '5-15k',
+        '15-50k',
+        '50-100k',
+        '100-200k',
+        '200-500k',
+        'Acima de 500k'
       ];
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual o seu faturamento mensal?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual é o seu faturamento mensal?</h2>
             <div className="space-y-3">
               {faturamentos.map((faturamento) => (
-                <button
+                <label
                   key={faturamento}
-                  onClick={() => updateField('faturamento', faturamento)}
-                  className={`w-full px-4 md:px-6 py-3 md:py-4 text-base md:text-lg rounded-lg border-2 transition-all ${
+                  className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                     formData.faturamento === faturamento
-                      ? 'bg-primary/20 border-primary text-white'
-                      : 'bg-form-input-bg border border-form-input-border text-white hover:border-primary/50'
+                      ? 'bg-accent border border-accent-foreground'
+                      : 'bg-secondary border border-border hover:bg-secondary/80'
                   }`}
+                  onClick={() => updateField('faturamento', faturamento)}
                 >
-                  {faturamento}
-                </button>
+                  <input
+                    type="radio"
+                    name="faturamento"
+                    value={faturamento}
+                    checked={formData.faturamento === faturamento}
+                    onChange={() => updateField('faturamento', faturamento)}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span className="text-white text-sm md:text-base">{faturamento}</span>
+                </label>
               ))}
             </div>
           </div>
@@ -535,41 +553,49 @@ const StoriesCleitonQuerobin = () => {
     // Pergunta 8 - Dificuldade
     if (step === 8) {
       const dificuldades = [
-        'Atrair mais clientes',
-        'Converter seguidores em clientes',
-        'Escalar meu negócio',
-        'Organizar minha rotina',
+        'Não consigo atrair leads qualificados de forma consistente.',
+        'Tenho dificuldade em converter os leads que chegam em vendas.',
+        'Estou preso demais na operação e não consigo focar no crescimento.',
+        'Meu negócio até cresce, mas sem estrutura, equipe ou processos sólidos.',
+        'Não tenho clareza dos números e isso trava minhas decisões.',
+        'Meu negócio cresce, mas quero multiplicar com mais método e previsibilidade.',
         'Outro'
       ];
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual é a sua maior dificuldade hoje?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual é a sua principal dificuldade hoje?</h2>
             <div className="space-y-3">
               {dificuldades.map((dificuldade) => (
-                <button
+                <label
                   key={dificuldade}
-                  onClick={() => updateField('dificuldade', dificuldade)}
-                  className={`w-full px-4 md:px-6 py-3 md:py-4 text-base md:text-lg rounded-lg border-2 transition-all ${
+                  className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                     formData.dificuldade === dificuldade
-                      ? 'bg-primary/20 border-primary text-white'
-                      : 'bg-form-input-bg border border-form-input-border text-white hover:border-primary/50'
+                      ? 'bg-accent border border-accent-foreground'
+                      : 'bg-secondary border border-border hover:bg-secondary/80'
                   }`}
+                  onClick={() => updateField('dificuldade', dificuldade)}
                 >
-                  {dificuldade}
-                </button>
+                  <input
+                    type="radio"
+                    name="dificuldade"
+                    value={dificuldade}
+                    checked={formData.dificuldade === dificuldade}
+                    onChange={() => updateField('dificuldade', dificuldade)}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span className="text-white text-sm md:text-base">{dificuldade}</span>
+                </label>
               ))}
             </div>
             {formData.dificuldade === 'Outro' && (
-              <div className="mt-4">
-                <textarea
-                  value={formData.outraDificuldade || ''}
-                  onChange={(e) => updateField('outraDificuldade', e.target.value)}
-                  placeholder="Descreva sua dificuldade..."
-                  className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground min-h-[100px]"
-                  autoFocus
-                />
-              </div>
+              <textarea
+                value={formData.outraDificuldade}
+                onChange={(e) => updateField('outraDificuldade', e.target.value)}
+                placeholder="Descreva sua principal dificuldade..."
+                className="w-full mt-4 px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+                rows={4}
+              />
             )}
           </div>
         </div>
@@ -579,27 +605,36 @@ const StoriesCleitonQuerobin = () => {
     // Pergunta 9 - Investimento
     if (step === 9) {
       const investimentos = [
-        'Sim, estou pronto para investir',
-        'Depende do valor',
-        'Ainda não posso investir'
+        'Quero avaliar opções de parcelamento',
+        'Ainda não estou decidido, quero mais Informações',
+        'Pagamento à vista'
       ];
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Você está disposto a investir em uma mentoria?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">O investimento para participar dos nossos programas é de R$ 9.997,00 à R$ 100.000,00</h2>
+            <p className="text-[13px] md:text-lg text-gray-300 mb-6">Gostaria de seguir com o processo seletivo?</p>
             <div className="space-y-3">
               {investimentos.map((investimento) => (
-                <button
+                <label
                   key={investimento}
-                  onClick={() => updateField('investimento', investimento)}
-                  className={`w-full px-4 md:px-6 py-3 md:py-4 text-base md:text-lg rounded-lg border-2 transition-all ${
+                  className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
                     formData.investimento === investimento
-                      ? 'bg-primary/20 border-primary text-white'
-                      : 'bg-form-input-bg border border-form-input-border text-white hover:border-primary/50'
+                      ? 'bg-accent border border-accent-foreground'
+                      : 'bg-secondary border border-border hover:bg-secondary/80'
                   }`}
+                  onClick={() => updateField('investimento', investimento)}
                 >
-                  {investimento}
-                </button>
+                  <input
+                    type="radio"
+                    name="investimento"
+                    value={investimento}
+                    checked={formData.investimento === investimento}
+                    onChange={() => updateField('investimento', investimento)}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span className="text-white text-sm md:text-base">{investimento}</span>
+                </label>
               ))}
             </div>
           </div>
@@ -612,30 +647,35 @@ const StoriesCleitonQuerobin = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Escolha a melhor data para sua entrevista:</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">Último passo:</h2>
+            <p className="text-[13px] md:text-lg text-gray-300 mb-2">Entrevista com um de nossos especialistas para validação do seu perfil.</p>
+            <p className="text-[13px] md:text-lg text-white mb-6">Escolha o melhor dia e hora (horário de Brasília):</p>
             <div className="space-y-3">
-              {availableDates.length === 0 ? (
-                <p className="text-gray-300 text-center py-4">
-                  Nenhuma data disponível no momento. Por favor, tente novamente mais tarde.
-                </p>
-              ) : (
-                availableDates.map((date) => {
-                  const dateStr = formatDateForDB(date);
-                  return (
-                    <button
-                      key={dateStr}
-                      onClick={() => updateField('data_agendamento', dateStr)}
-                      className={`w-full px-4 md:px-6 py-3 md:py-4 text-base md:text-lg rounded-lg border-2 transition-all ${
-                        formData.data_agendamento === dateStr
-                          ? 'bg-primary/20 border-primary text-white'
-                          : 'bg-form-input-bg border border-form-input-border text-white hover:border-primary/50'
-                      }`}
-                    >
-                      {formatDateForDisplay(date)}
-                    </button>
-                  );
-                })
-              )}
+              {availableDates.map((date) => {
+                const dateStr = formatDateForDB(date);
+                const displayStr = formatDateForDisplay(date);
+                return (
+                  <label
+                    key={dateStr}
+                    className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
+                      formData.data_agendamento === dateStr
+                        ? 'bg-accent border border-accent-foreground'
+                        : 'bg-secondary border border-border hover:bg-secondary/80'
+                    }`}
+                    onClick={() => updateField('data_agendamento', dateStr)}
+                  >
+                    <input
+                      type="radio"
+                      name="data"
+                      value={dateStr}
+                      checked={formData.data_agendamento === dateStr}
+                      onChange={() => updateField('data_agendamento', dateStr)}
+                      className="mr-3 h-4 w-4"
+                    />
+                    <span className="text-white capitalize text-sm md:text-base">{displayStr}</span>
+                  </label>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -644,91 +684,113 @@ const StoriesCleitonQuerobin = () => {
 
     // Pergunta 11 - Horário
     if (step === 11) {
+      const selectedDate = availableDates.find(
+        d => formatDateForDB(d) === formData.data_agendamento
+      );
+      const displayDate = selectedDate ? formatDateForDisplay(selectedDate) : '';
+      
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Escolha o melhor horário:</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {availableTimes.length === 0 ? (
-                <p className="text-gray-300 text-center py-4 col-span-full">
-                  Nenhum horário disponível para esta data.
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Escolha o horário</h2>
+            {availableTimes.length === 0 ? (
+              <div className="p-4 md:p-6 bg-destructive/10 border border-destructive rounded-lg">
+                <p className="text-destructive text-sm md:text-base">
+                  Não há horários disponíveis para esta data. Por favor, volte e escolha outra data.
                 </p>
-              ) : (
-                availableTimes.map((time) => (
-                  <button
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+                {availableTimes.map((time) => (
+                  <label
                     key={time}
-                    onClick={() => updateField('horario_agendamento', time)}
-                    className={`px-4 md:px-6 py-3 md:py-4 text-base md:text-lg rounded-lg border-2 transition-all ${
+                    className={`flex items-center justify-center p-3 md:p-4 rounded-lg cursor-pointer transition font-semibold text-sm md:text-base ${
                       formData.horario_agendamento === time
-                        ? 'bg-primary/20 border-primary text-white'
-                        : 'bg-form-input-bg border border-form-input-border text-white hover:border-primary/50'
+                        ? 'bg-primary text-white border border-primary'
+                        : 'bg-secondary border border-border text-white hover:bg-secondary/80'
                     }`}
+                    onClick={() => updateField('horario_agendamento', time)}
                   >
+                    <input
+                      type="radio"
+                      name="horario"
+                      value={time}
+                      checked={formData.horario_agendamento === time}
+                      onChange={() => updateField('horario_agendamento', time)}
+                      className="sr-only"
+                    />
                     {time}
-                  </button>
-                ))
-              )}
-            </div>
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       );
     }
 
-    // Página de agradecimento
+    // Página de Agradecimento
     if (step === 12) {
+      const selectedDate = availableDates.find(
+        d => formatDateForDB(d) === formData.data_agendamento
+      );
+      const displayDate = selectedDate ? formatDateForDisplay(selectedDate) : '';
+      const firstName = formData.nome.split(' ')[0];
+      
       return (
-        <div className="space-y-6 text-center max-w-2xl mx-auto">
-          <div className="space-y-4">
-            <h2 className="text-2xl md:text-4xl font-bold text-white">
-              🎉 Parabéns, {formData.nome.split(' ')[0]}!
-            </h2>
-            <p className="text-base md:text-xl text-gray-300">
-              Sua entrevista foi agendada com sucesso!
-            </p>
+        <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
+          {/* Obrigado com barra lateral */}
+          <div className="flex gap-3 md:gap-4 items-start">
+            <div className="w-1 h-12 md:h-16 bg-primary rounded-full flex-shrink-0" />
+            <div>
+              <h1 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-4">Obrigado!</h1>
+              <p className="text-base md:text-lg text-gray-300">
+                Sua entrevista foi agendada com sucesso.
+              </p>
+            </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 md:p-8 border border-white/10">
-            <h3 className="text-lg md:text-2xl font-semibold text-white mb-4">
-              📅 Detalhes do seu agendamento:
-            </h3>
-            <div className="space-y-3 text-left">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400">Data:</span>
-                <span className="text-white font-medium">
-                  {formatDateForDisplay(new Date(formData.data_agendamento + 'T00:00:00'))}
-                </span>
+          {/* Box de agendamento */}
+          <div className="bg-secondary/50 border border-border rounded-lg p-4 md:p-6">
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400">Horário:</span>
-                <span className="text-white font-medium">{formData.horario_agendamento}</span>
+              <div>
+                <p className="text-white font-semibold text-base md:text-lg capitalize">{displayDate}</p>
+                <p className="text-primary font-bold text-xl md:text-2xl">{formData.horario_agendamento}</p>
               </div>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <p className="text-sm md:text-base text-gray-300">
-              📧 Enviamos uma confirmação para <span className="text-white font-medium">{formData.email}</span>
-            </p>
-            <p className="text-sm md:text-base text-gray-300">
-              📱 E também para o WhatsApp <span className="text-white font-medium">{formData.telefone}</span>
-            </p>
-          </div>
+          {/* Texto informativo */}
+          <p className="text-gray-300 text-center text-sm md:text-base">
+            As informações sobre a entrevista foram adicionadas à sua agenda.
+          </p>
+          
+          <p className="text-primary font-semibold text-center text-base md:text-lg">
+            Entraremos em contato via WhatsApp em vídeo.
+          </p>
 
-          <div className="pt-6">
-            <p className="text-base md:text-lg text-white font-medium mb-4">
-              Enquanto isso, assista este vídeo importante:
-            </p>
-            <div 
-              ref={videoContainerRef}
-              id="vid_692066657cc713fc76f626ec" 
-              className="w-full aspect-video rounded-lg overflow-hidden bg-black/50"
-            ></div>
-          </div>
+          {/* Vídeo Smartplayer */}
+          <div 
+            ref={videoContainerRef}
+            className="bg-secondary/30 border border-border rounded-lg overflow-hidden p-2"
+            dangerouslySetInnerHTML={{
+              __html: '<vturb-smartplayer id="vid-692066657cc713fc76f626ec" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>'
+            }}
+          />
 
-          <div className="pt-4">
-            <p className="text-xs md:text-sm text-gray-400">
-              Fique atento ao seu e-mail e WhatsApp para mais informações sobre a entrevista.
-            </p>
+          {/* Botão CTA */}
+          <div className="text-center pt-2 md:pt-4">
+            <a
+              href="https://lp.bethelescoladenegocios.com.br/bethel-educacao-pag-ot-v1-h1"
+              className="inline-block px-6 md:px-8 py-3 md:py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition text-base md:text-lg"
+            >
+              Conheça nossos programas
+            </a>
           </div>
         </div>
       );
@@ -736,65 +798,50 @@ const StoriesCleitonQuerobin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
-        <FormHeader />
-        
-        <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 md:p-8 shadow-2xl border border-white/10">
-          {step < 12 && (
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm md:text-base text-gray-400">
-                  Pergunta {step} de 11
-                </span>
-                <span className="text-sm md:text-base text-gray-400">
-                  {Math.round((step / 11) * 100)}%
-                </span>
-              </div>
-              <div className="w-full bg-white/10 rounded-full h-2">
-                <div
-                  className="bg-gradient-to-r from-primary to-primary/80 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(step / 11) * 100}%` }}
-                />
-              </div>
-            </div>
-          )}
-
-          {renderStep()}
-
+    <div className="min-h-screen bg-background">
+      <FormHeader />
+      
+      <div className="w-full flex items-center justify-center px-5 md:px-4 pb-12 min-h-[calc(100vh-200px)]">
+        <div className="w-full max-w-[90%] md:max-w-xl">
+          <div>
+            {renderStep()}
+          </div>
+          
           {error && (
-            <div className="mt-4 p-3 md:p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <p className="text-red-400 text-sm md:text-base">{error}</p>
+            <div className="mt-6 p-3 bg-destructive/20 border border-destructive rounded-lg">
+              <p className="text-destructive text-sm text-center">{error}</p>
             </div>
           )}
-
+          
           {step < 12 && (
-            <div className="mt-8 flex gap-3">
-              {step > 1 && (
+            <div className="flex justify-between items-center mt-8">
+              {step > 1 ? (
                 <button
                   onClick={handleBack}
-                  className="px-6 md:px-8 py-3 md:py-4 text-base md:text-lg rounded-lg border-2 border-white/20 text-white hover:bg-white/5 transition-all"
-                  disabled={isSubmitting || isSaving}
+                  className="text-muted-foreground hover:text-foreground transition text-sm md:text-base"
                 >
                   Voltar
                 </button>
+              ) : (
+                <div />
               )}
+              
               <button
                 onClick={handleNext}
-                disabled={isSubmitting || isSaving}
-                className="flex-1 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg rounded-lg bg-gradient-to-r from-primary to-primary/80 text-white font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSubmitting}
+                className="px-5 md:px-8 py-[15px] md:py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
               >
-                {isSubmitting || isSaving ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                    {isSubmitting ? 'Finalizando...' : 'Salvando...'}
-                  </span>
-                ) : step === 11 ? (
-                  'Finalizar'
-                ) : (
-                  'Continuar'
-                )}
+                {step === 11 ? (isSubmitting ? 'Confirmando...' : 'Confirmar Agendamento') : 'Continuar'}
               </button>
+            </div>
+          )}
+          
+          {/* Indicador de auto-save */}
+          {isSaving && step < 12 && (
+            <div className="mt-4 text-center">
+              <p className="text-xs md:text-sm text-muted-foreground">
+                Salvando automaticamente...
+              </p>
             </div>
           )}
         </div>
