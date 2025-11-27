@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import FeedCleitonQuerobin from "./pages/FeedCleitonQuerobin";
 import StoriesCleitonQuerobin from "./pages/StoriesCleitonQuerobin";
+import YoutubeCleitonQuerobin from "./pages/YoutubeCleitonQuerobin";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +27,9 @@ const App = () => (
           
           {/* Stories Cleiton Querobin - Formulário duplicado */}
           <Route path="/stories-cleiton-querobin" element={<StoriesCleitonQuerobin />} />
+          
+          {/* Youtube Cleiton Querobin - Formulário duplicado */}
+          <Route path="/youtube-cleiton-querobin" element={<YoutubeCleitonQuerobin />} />
           
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />
