@@ -19,7 +19,8 @@ export interface FormData {
 const SPREADSHEET_IDS: Record<string, string> = {
   'bio': '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8',
   'feed-cleiton-querobin': '1i32baM2j8C8V4_zhc4zh0tI0hc5y9istEUGa6UsBdR0',
-  'stories-cleiton-querobin': '1D8iSRnlwUJAITQfd8zQ8-nKqLtXXNoOGGTCQetjlQF8'
+  'stories-cleiton-querobin': '1D8iSRnlwUJAITQfd8zQ8-nKqLtXXNoOGGTCQetjlQF8',
+  'youtube-cleiton-querobin': '1zaF7Ln6dr1S0M21BTCr_RvQJHGmrN7WtM2AJrV-7eho'
 };
 
 export const useFormPersistence = (formType: string = 'bio') => {
