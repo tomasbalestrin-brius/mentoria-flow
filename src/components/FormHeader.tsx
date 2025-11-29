@@ -1,4 +1,8 @@
-export const FormHeader = () => {
+interface FormHeaderProps {
+  mentorName?: string;
+}
+
+export const FormHeader = ({ mentorName = "Cleiton Querobin" }: FormHeaderProps) => {
   return (
     <div className="w-full pt-8 px-8 mb-8">
       <div className="max-w-4xl mx-auto">
@@ -8,7 +12,7 @@ export const FormHeader = () => {
             alt="Bethel Educação" 
             className="h-12 md:h-14 object-contain"
           />
-          <span className="text-white font-semibold text-sm md:text-lg">Cleiton Querobin</span>
+          <span className="text-white font-semibold text-sm md:text-lg">{mentorName}</span>
         </div>
         <div 
           className="w-full h-px"

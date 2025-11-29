@@ -799,7 +799,7 @@ const StoriesJuliaOttoni = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <FormHeader />
+      <FormHeader mentorName="Julia Ottoni" />
       
       <div className="w-full flex items-center justify-center px-5 md:px-4 pb-12 min-h-[calc(100vh-200px)]">
         <div className="w-full max-w-[90%] md:max-w-xl">
