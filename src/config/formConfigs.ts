@@ -93,5 +93,18 @@ export const formConfigs: Record<string, FormConfig> = {
     googleSheet: {
       spreadsheetId: '133gBqiRXlPTG1kDN_Zo0G4RaOFZjn_unuqcApqFakZg'
     }
+  },
+  'feed-julia-ottoni': {
+    id: 'feed-julia-ottoni',
+    title: 'Feed Julia Ottoni',
+    description: 'Aplicação para Mentoria - Feed Julia Ottoni',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '10p8wQKI2gBKK8kwhQ2vqzQ_xIMcFpvOJQmwkUMbkMZw'
+    }
   }
 };

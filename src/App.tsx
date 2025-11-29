@@ -8,6 +8,7 @@ import FeedCleitonQuerobin from "./pages/FeedCleitonQuerobin";
 import StoriesCleitonQuerobin from "./pages/StoriesCleitonQuerobin";
 import YoutubeCleitonQuerobin from "./pages/YoutubeCleitonQuerobin";
 import StoriesJuliaOttoni from "./pages/StoriesJuliaOttoni";
+import FeedJuliaOttoni from "./pages/FeedJuliaOttoni";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
@@ -34,6 +35,9 @@ const App = () => (
           
           {/* Stories Julia Ottoni - Formulário duplicado */}
           <Route path="/stories-julia-ottoni" element={<StoriesJuliaOttoni />} />
+          
+          {/* Feed Julia Ottoni - Formulário duplicado */}
+          <Route path="/feed-julia-ottoni" element={<FeedJuliaOttoni />} />
           
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />
