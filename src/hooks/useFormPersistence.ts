@@ -22,7 +22,8 @@ const SPREADSHEET_IDS: Record<string, string> = {
   'stories-cleiton-querobin': '1D8iSRnlwUJAITQfd8zQ8-nKqLtXXNoOGGTCQetjlQF8',
   'youtube-cleiton-querobin': '1zaF7Ln6dr1S0M21BTCr_RvQJHGmrN7WtM2AJrV-7eho',
   'stories-julia-ottoni': '133gBqiRXlPTG1kDN_Zo0G4RaOFZjn_unuqcApqFakZg',
-  'feed-julia-ottoni': '10p8wQKI2gBKK8kwhQ2vqzQ_xIMcFpvOJQmwkUMbkMZw'
+  'feed-julia-ottoni': '10p8wQKI2gBKK8kwhQ2vqzQ_xIMcFpvOJQmwkUMbkMZw',
+  'trafego-postagens': '1cuMG8qVGl2YB4eZXqfqDrIIlvqCiQYosmMoMTEEjRHI'
 };
 
 export const useFormPersistence = (formType: string = 'bio') => {
