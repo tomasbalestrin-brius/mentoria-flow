@@ -106,5 +106,18 @@ export const formConfigs: Record<string, FormConfig> = {
     googleSheet: {
       spreadsheetId: '10p8wQKI2gBKK8kwhQ2vqzQ_xIMcFpvOJQmwkUMbkMZw'
     }
+  },
+  'trafego-postagens': {
+    id: 'trafego-postagens',
+    title: 'Trafego Postagens',
+    description: 'Aplicação para Mentoria - Trafego Postagens',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '1cuMG8qVGl2YB4eZXqfqDrIIlvqCiQYosmMoMTEEjRHI'
+    }
   }
 };
