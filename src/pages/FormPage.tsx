@@ -12,7 +12,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
 import { supabase } from '@/integrations/supabase/client';
-import { formatDateForDB, filterAvailableTimes } from '@/lib/dateUtils';
+import { formatDateForDB, filterAvailableTimes, isMondayBlockedTime } from '@/lib/dateUtils';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
@@ -272,16 +272,20 @@ export default function FormPage({ formType }: FormPageProps) {
               </div>
             ) : (
               <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-                {availableTimes.map((time) => (
-                  <Button
-                    key={time}
-                    variant={formData.horario_agendamento === time ? 'default' : 'outline'}
-                    onClick={() => handleInputChange('horario_agendamento', time)}
-                    className="py-6"
-                  >
-                    {time}
-                  </Button>
-                ))}
+                {availableTimes.map((time) => {
+                  const isBlocked = selectedDate ? isMondayBlockedTime(time, selectedDate) : false;
+                  return (
+                    <Button
+                      key={time}
+                      variant={formData.horario_agendamento === time ? 'default' : 'outline'}
+                      onClick={() => !isBlocked && handleInputChange('horario_agendamento', time)}
+                      className={`py-6 ${isBlocked ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      disabled={isBlocked}
+                    >
+                      {time}
+                    </Button>
+                  );
+                })}
               </div>
             )}
             {availableTimes.length === 0 && !isLoadingTimes && (

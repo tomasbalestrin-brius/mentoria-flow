@@ -7,7 +7,8 @@ import {
   formatDateForDisplay, 
   formatDateForDB,
   AVAILABLE_TIMES,
-  filterAvailableTimes 
+  filterAvailableTimes,
+  isMondayBlockedTime 
 } from '@/lib/dateUtils';
 import { toast } from 'sonner';
 
@@ -701,27 +702,33 @@ const StoriesJuliaOttoni = () => {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-                {availableTimes.map((time) => (
-                  <label
-                    key={time}
-                    className={`flex items-center justify-center p-3 md:p-4 rounded-lg cursor-pointer transition font-semibold text-sm md:text-base ${
-                      formData.horario_agendamento === time
-                        ? 'bg-primary text-white border border-primary'
-                        : 'bg-secondary border border-border text-white hover:bg-secondary/80'
-                    }`}
-                    onClick={() => updateField('horario_agendamento', time)}
-                  >
-                    <input
-                      type="radio"
-                      name="horario"
-                      value={time}
-                      checked={formData.horario_agendamento === time}
-                      onChange={() => updateField('horario_agendamento', time)}
-                      className="sr-only"
-                    />
-                    {time}
-                  </label>
-                ))}
+                {availableTimes.map((time) => {
+                  const isBlocked = isMondayBlockedTime(time, new Date(formData.data_agendamento + 'T00:00:00'));
+                  return (
+                    <label
+                      key={time}
+                      className={`flex items-center justify-center p-3 md:p-4 rounded-lg transition font-semibold text-sm md:text-base ${
+                        isBlocked
+                          ? 'opacity-30 cursor-not-allowed bg-secondary border border-border text-white'
+                          : formData.horario_agendamento === time
+                            ? 'bg-primary text-white border border-primary cursor-pointer'
+                            : 'bg-secondary border border-border text-white hover:bg-secondary/80 cursor-pointer'
+                      }`}
+                      onClick={() => !isBlocked && updateField('horario_agendamento', time)}
+                    >
+                      <input
+                        type="radio"
+                        name="horario"
+                        value={time}
+                        checked={formData.horario_agendamento === time}
+                        onChange={() => !isBlocked && updateField('horario_agendamento', time)}
+                        className="sr-only"
+                        disabled={isBlocked}
+                      />
+                      {time}
+                    </label>
+                  );
+                })}
               </div>
             )}
           </div>

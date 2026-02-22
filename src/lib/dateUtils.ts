@@ -45,6 +45,12 @@ export const formatDateForDB = (date: Date): string => {
   return format(date, 'yyyy-MM-dd');
 };
 
+const MONDAY_BLOCKED_TIMES = ['09:30', '10:00', '10:30', '11:00'];
+
+export const isMondayBlockedTime = (time: string, selectedDate: Date): boolean => {
+  return selectedDate.getDay() === 1 && MONDAY_BLOCKED_TIMES.includes(time);
+};
+
 export const AVAILABLE_TIMES = [
   '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
   '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
