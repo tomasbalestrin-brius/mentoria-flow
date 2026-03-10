@@ -73,10 +73,13 @@ serve(async (req) => {
 
     const { access_token } = await tokenResponse.json();
 
+    // Calcular última coluna dinamicamente baseado no número de valores
+    const lastCol = String.fromCharCode(64 + values.length); // 14→N, 17→Q
+    
     // Atualizar ou adicionar no Google Sheets
     const sheetsUrl = rowId 
-      ? `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A${rowId}:N${rowId}?valueInputOption=USER_ENTERED`
-      : `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A:N:append?valueInputOption=USER_ENTERED`;
+      ? `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A${rowId}:${lastCol}${rowId}?valueInputOption=USER_ENTERED`
+      : `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A:${lastCol}:append?valueInputOption=USER_ENTERED`;
 
     const method = rowId ? 'PUT' : 'POST';
     
