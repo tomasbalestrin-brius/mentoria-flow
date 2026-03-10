@@ -140,10 +140,15 @@ export const useFormPersistence = (formType: string = 'bio') => {
       
       // Preparar dados sem outraDificuldade (que não existe como coluna)
       const { outraDificuldade, ...dataToSave } = formData;
+      const normalizedDate = formData.data_agendamento?.trim() ? formData.data_agendamento : null;
+      const normalizedTime = formData.horario_agendamento?.trim() ? formData.horario_agendamento : null;
+
       const finalData = {
         ...dataToSave,
-        dificuldade: formData.dificuldade === 'Outro' 
-          ? formData.outraDificuldade 
+        data_agendamento: normalizedDate,
+        horario_agendamento: normalizedTime,
+        dificuldade: formData.dificuldade === 'Outro'
+          ? formData.outraDificuldade
           : formData.dificuldade,
         ultima_pergunta: step,
         tipo_formulario: formType,
