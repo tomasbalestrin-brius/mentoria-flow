@@ -1,15 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { FormHeader } from '@/components/FormHeader';
 import { useFormPersistence, FormData } from '@/hooks/useFormPersistence';
-import { supabase } from '@/integrations/supabase/client';
-import { 
-  getNextWorkingDays, 
-  formatDateForDisplay, 
-  formatDateForDB,
-  AVAILABLE_TIMES,
-  filterAvailableTimes,
-  isMondayBlockedTime 
-} from '@/lib/dateUtils';
 import { toast } from 'sonner';
 
 const Index = () => {
@@ -29,100 +20,14 @@ const Index = () => {
     horario_agendamento: '',
   });
   const [error, setError] = useState('');
-  const [availableDates, setAvailableDates] = useState<Date[]>([]);
-  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [datesWithTimes, setDatesWithTimes] = useState<Map<string, string[]>>(new Map());
   const videoContainerRef = useRef<HTMLDivElement>(null);
   
   const { saveProgress, completeForm, isSaving } = useFormPersistence();
 
+  // Auto-save com debounce
   useEffect(() => {
-    // Gerar apenas hoje e amanhã e filtrar apenas os que têm horários
-    const fetchDatesWithAvailability = async () => {
-      const dates = getNextWorkingDays(2);
-      const datesMap = new Map<string, string[]>();
-      const validDates: Date[] = [];
-      
-      for (const date of dates) {
-        const dateStr = formatDateForDB(date);
-        try {
-          // PRIORIDADE 1: Buscar do Supabase (fonte confiável)
-          let bookedTimes: string[] = [];
-          const { data: supabaseData, error: supabaseError } = await supabase
-            .from('agendamentos')
-            .select('horario_agendamento')
-            .eq('data_agendamento', dateStr);
-          
-          if (supabaseError) {
-            console.error('Supabase error, trying Google Sheets:', supabaseError);
-            // Fallback para Google Sheets apenas se Supabase falhar
-            try {
-              const { data: sheetData } = await supabase.functions.invoke('get-booked-times', {
-                body: {
-                  date: dateStr,
-                  spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
-                }
-              });
-              bookedTimes = sheetData?.bookedTimes || [];
-            } catch {
-              bookedTimes = [];
-            }
-          } else {
-            // Normalizar formato HH:MM:SS para HH:MM removendo os segundos
-            bookedTimes = supabaseData?.map(a => {
-              const time = a.horario_agendamento || '';
-              return time.substring(0, 5); // Remove segundos se existirem
-            }).filter(Boolean) || [];
-          }
-          
-          console.log(`Raw booked times from Supabase:`, supabaseData?.map(a => a.horario_agendamento));
-          console.log(`Normalized booked times for ${dateStr}:`, bookedTimes);
-          const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, date);
-          
-          // Apenas adicionar datas que tenham horários disponíveis
-          if (filtered.length > 0) {
-            datesMap.set(dateStr, filtered);
-            validDates.push(date);
-          }
-        } catch (error) {
-          console.error('Error checking availability for date:', dateStr, error);
-        }
-      }
-      
-      setDatesWithTimes(datesMap);
-      setAvailableDates(validDates);
-    };
-    
-    fetchDatesWithAvailability();
-  }, []);
-
-  useEffect(() => {
-    // Buscar horários disponíveis quando uma data for selecionada
-    if (formData.data_agendamento) {
-      fetchAvailableTimes(formData.data_agendamento);
-    }
-  }, [formData.data_agendamento]);
-
-  // Polling para atualizar horários disponíveis em tempo real
-  useEffect(() => {
-    // Apenas atualizar quando estiver nas etapas de seleção de data/horário
-    if ((step === 10 || step === 11) && formData.data_agendamento) {
-      const intervalId = setInterval(() => {
-        console.log('Refreshing available times...');
-        fetchAvailableTimes(formData.data_agendamento);
-      }, 30000); // Atualizar a cada 30 segundos
-
-      return () => clearInterval(intervalId);
-    }
-  }, [step, formData.data_agendamento]);
-
-  // Auto-save com debounce - salvar automaticamente após 3 segundos de inatividade
-  useEffect(() => {
-    // Não fazer auto-save durante submissão
     if (isSubmitting) return;
-    
-    // Só fazer auto-save se houver algum dado preenchido
     const hasData = formData.nome || formData.telefone || formData.email;
     if (!hasData) return;
 
@@ -130,17 +35,16 @@ const Index = () => {
       saveProgress(formData, step).catch(error => {
         console.error('Auto-save failed:', error);
       });
-    }, 3000); // 3 segundos de debounce
+    }, 3000);
 
     return () => clearTimeout(timeoutId);
   }, [formData, step, isSubmitting]);
 
-  // Captura ao sair da página - salvar antes de fechar
+  // Captura ao sair da página
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    const handleBeforeUnload = () => {
       const hasData = formData.nome || formData.telefone || formData.email;
       if (hasData && !isSubmitting) {
-        // Tentar salvar de forma síncrona usando sendBeacon se possível
         saveProgress(formData, step).catch(error => {
           console.error('Save on exit failed:', error);
         });
@@ -153,8 +57,7 @@ const Index = () => {
 
   // Carregar script do Smartplayer quando chegar na página de agradecimento
   useEffect(() => {
-    if (step === 12 && videoContainerRef.current) {
-      // Verificar se o script já foi carregado
+    if (step === 10 && videoContainerRef.current) {
       const existingScript = document.getElementById('smartplayer-script');
       if (!existingScript) {
         const script = document.createElement('script');
@@ -162,57 +65,9 @@ const Index = () => {
         script.src = 'https://scripts.converteai.net/60c57e38-903d-4b8c-afdb-955793042b17/players/692066657cc713fc76f626ec/v4/player.js';
         script.async = true;
         document.head.appendChild(script);
-        console.log('Smartplayer script loaded');
       }
     }
   }, [step]);
-
-  const fetchAvailableTimes = async (date: string) => {
-    try {
-      console.log('Fetching available times for:', date);
-      
-      // PRIORIDADE 1: Buscar do Supabase (fonte confiável)
-      const { data: supabaseData, error: supabaseError } = await supabase
-        .from('agendamentos')
-        .select('horario_agendamento')
-        .eq('data_agendamento', date);
-      
-      let bookedTimes: string[] = [];
-      
-      if (supabaseError) {
-        console.error('Supabase error, trying Google Sheets:', supabaseError);
-        // Fallback para Google Sheets apenas se Supabase falhar
-        try {
-          const { data: sheetData } = await supabase.functions.invoke('get-booked-times', {
-            body: {
-              date,
-              spreadsheetId: '1RsPpGt3BDOVBGii5FzJly8pufnathWXwhBKBh-4gYy8'
-            }
-          });
-          bookedTimes = sheetData?.bookedTimes || [];
-        } catch (sheetError) {
-          console.error('Google Sheets also failed:', sheetError);
-          bookedTimes = [];
-        }
-      } else {
-        // Normalizar formato HH:MM:SS para HH:MM removendo os segundos
-        bookedTimes = supabaseData.map(a => {
-          const time = a.horario_agendamento || '';
-          return time.substring(0, 5); // Remove segundos se existirem
-        }).filter(Boolean);
-      }
-      
-      console.log('Raw booked times from database:', supabaseData?.map(a => a.horario_agendamento));
-      console.log('Normalized booked times:', bookedTimes);
-      const selectedDate = new Date(date + 'T00:00:00');
-      const filtered = filterAvailableTimes(AVAILABLE_TIMES, bookedTimes, selectedDate);
-      console.log('Available times after filtering:', filtered);
-      setAvailableTimes(filtered);
-    } catch (error) {
-      console.error('Error fetching available times:', error);
-      setAvailableTimes(AVAILABLE_TIMES);
-    }
-  };
 
   const validateEmail = (email: string) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -282,18 +137,6 @@ const Index = () => {
           return false;
         }
         break;
-      case 10:
-        if (!formData.data_agendamento) {
-          setError('Por favor, selecione uma data');
-          return false;
-        }
-        break;
-      case 11:
-        if (!formData.horario_agendamento) {
-          setError('Por favor, selecione um horário');
-          return false;
-        }
-        break;
     }
     
     return true;
@@ -303,15 +146,12 @@ const Index = () => {
     if (!validateStep()) return;
     
     try {
-      // Tentar salvar progresso, mas continuar mesmo se falhar
       await saveProgress(formData, step);
     } catch (error) {
       console.error('Error saving progress:', error);
-      // Não bloquear o avanço se o save falhar
     }
     
-    // Avançar para próxima pergunta
-    if (step < 11) {
+    if (step < 9) {
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -323,20 +163,12 @@ const Index = () => {
     setIsSubmitting(true);
     try {
       await completeForm(formData);
-      setStep(12); // Página de agradecimento
+      setStep(10);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
       console.error('Error completing form:', error);
-      if (error.message.includes('horário já')) {
-        // Atualizar lista de horários e mostrar erro claro
-        await fetchAvailableTimes(formData.data_agendamento);
-        setError('Este horário foi agendado enquanto você preenchia o formulário. Por favor, escolha outro horário.');
-        setStep(11); // Voltar para seleção de horário
-        toast.error('Horário indisponível. Por favor, escolha outro horário.');
-      } else {
-        setError('Erro ao finalizar aplicação. Tente novamente.');
-        toast.error('Erro ao finalizar aplicação. Tente novamente.');
-      }
+      setError('Erro ao finalizar aplicação. Tente novamente.');
+      toast.error('Erro ao finalizar aplicação. Tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -643,105 +475,8 @@ const Index = () => {
       );
     }
 
-    // Pergunta 10 - Data
-    if (step === 10) {
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">Último passo:</h2>
-            <p className="text-[13px] md:text-lg text-gray-300 mb-2">Entrevista com um de nossos especialistas para validação do seu perfil.</p>
-            <p className="text-[13px] md:text-lg text-white mb-6">Escolha o melhor dia e hora (horário de Brasília):</p>
-            <div className="space-y-3">
-              {availableDates.map((date) => {
-                const dateStr = formatDateForDB(date);
-                const displayStr = formatDateForDisplay(date);
-                return (
-                  <label
-                    key={dateStr}
-                    className={`flex items-center p-3 md:p-4 rounded-lg cursor-pointer transition ${
-                      formData.data_agendamento === dateStr
-                        ? 'bg-accent border border-accent-foreground'
-                        : 'bg-secondary border border-border hover:bg-secondary/80'
-                    }`}
-                    onClick={() => updateField('data_agendamento', dateStr)}
-                  >
-                    <input
-                      type="radio"
-                      name="data"
-                      value={dateStr}
-                      checked={formData.data_agendamento === dateStr}
-                      onChange={() => updateField('data_agendamento', dateStr)}
-                      className="mr-3 h-4 w-4"
-                    />
-                    <span className="text-white capitalize text-sm md:text-base">{displayStr}</span>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Pergunta 11 - Horário
-    if (step === 11) {
-      const selectedDate = availableDates.find(
-        d => formatDateForDB(d) === formData.data_agendamento
-      );
-      const displayDate = selectedDate ? formatDateForDisplay(selectedDate) : '';
-      
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Escolha o horário</h2>
-            {availableTimes.length === 0 ? (
-              <div className="p-4 md:p-6 bg-destructive/10 border border-destructive rounded-lg">
-                <p className="text-destructive text-sm md:text-base">
-                  Não há horários disponíveis para esta data. Por favor, volte e escolha outra data.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-                {availableTimes.map((time) => {
-                  const isBlocked = isMondayBlockedTime(time, new Date(formData.data_agendamento + 'T00:00:00'));
-                  return (
-                    <label
-                      key={time}
-                      className={`flex items-center justify-center p-3 md:p-4 rounded-lg transition font-semibold text-sm md:text-base ${
-                        isBlocked
-                          ? 'opacity-30 cursor-not-allowed bg-secondary border border-border text-white'
-                          : formData.horario_agendamento === time
-                            ? 'bg-primary text-white border border-primary cursor-pointer'
-                            : 'bg-secondary border border-border text-white hover:bg-secondary/80 cursor-pointer'
-                      }`}
-                      onClick={() => !isBlocked && updateField('horario_agendamento', time)}
-                    >
-                      <input
-                        type="radio"
-                        name="horario"
-                        value={time}
-                        checked={formData.horario_agendamento === time}
-                        onChange={() => !isBlocked && updateField('horario_agendamento', time)}
-                        className="sr-only"
-                        disabled={isBlocked}
-                      />
-                      {time}
-                    </label>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
-
     // Página de Agradecimento
-    if (step === 12) {
-      const selectedDate = availableDates.find(
-        d => formatDateForDB(d) === formData.data_agendamento
-      );
-      const displayDate = selectedDate ? formatDateForDisplay(selectedDate) : '';
+    if (step === 10) {
       const firstName = formData.nome.split(' ')[0];
       
       return (
@@ -752,34 +487,24 @@ const Index = () => {
             <div>
               <h1 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-4">Obrigado!</h1>
               <p className="text-base md:text-lg text-gray-300">
-                Sua entrevista foi agendada com sucesso.
+                Sua aplicação foi enviada com sucesso.
               </p>
             </div>
           </div>
 
-          {/* Box de agendamento */}
+          {/* Mensagem sobre contato via WhatsApp */}
           <div className="bg-secondary/50 border border-border rounded-lg p-4 md:p-6">
             <div className="flex items-center gap-3 md:gap-4">
               <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 md:w-6 md:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </div>
-              <div>
-                <p className="text-white font-semibold text-base md:text-lg capitalize">{displayDate}</p>
-                <p className="text-primary font-bold text-xl md:text-2xl">{formData.horario_agendamento}</p>
-              </div>
+              <p className="text-white font-semibold text-sm md:text-base">
+                Se você for selecionado nossa equipe irá entrar em contato com você no seu WhatsApp
+              </p>
             </div>
           </div>
-
-          {/* Texto informativo */}
-          <p className="text-gray-300 text-center text-sm md:text-base">
-            As informações sobre a entrevista foram adicionadas à sua agenda.
-          </p>
-          
-          <p className="text-primary font-semibold text-center text-base md:text-lg">
-            Entraremos em contato via WhatsApp em vídeo.
-          </p>
 
           {/* Vídeo Smartplayer */}
           <div 
@@ -820,7 +545,7 @@ const Index = () => {
             </div>
           )}
           
-          {step < 12 && (
+          {step < 10 && (
             <div className="flex justify-between items-center mt-8">
               {step > 1 ? (
                 <button
@@ -838,13 +563,12 @@ const Index = () => {
                 disabled={isSubmitting}
                 className="px-5 md:px-8 py-[15px] md:py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
               >
-                {step === 11 ? (isSubmitting ? 'Confirmando...' : 'Confirmar Agendamento') : 'Continuar'}
+                {step === 9 ? (isSubmitting ? 'Finalizando...' : 'Finalizar') : 'Continuar'}
               </button>
             </div>
           )}
           
-          {/* Indicador de auto-save */}
-          {isSaving && step < 12 && (
+          {isSaving && step < 10 && (
             <div className="mt-4 text-center">
               <p className="text-xs md:text-sm text-muted-foreground">
                 Salvando automaticamente...

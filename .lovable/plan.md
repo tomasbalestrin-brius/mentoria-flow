@@ -1,44 +1,94 @@
 
 
-## Remover agendamento do formulário da rota `/` e atualizar página de obrigado
+## Bloquear horarios de segunda-feira (9:30 - 11:00) em todos os formularios
+
+### Contexto
+Todos os 8 formularios com agendamento usam a funcao `filterAvailableTimes` de `src/lib/dateUtils.ts` e renderizam os horarios de forma similar. Os horarios 09:30, 10:00, 10:30 e 11:00 devem aparecer com opacidade baixa e nao podem ser clicados quando a data selecionada for uma segunda-feira.
+
+### Alteracoes
+
+#### 1. `src/lib/dateUtils.ts` - Adicionar funcao auxiliar
+
+Criar e exportar uma nova funcao `isMondayBlockedTime` que verifica se um horario esta bloqueado para segundas-feiras:
+
+```typescript
+const MONDAY_BLOCKED_TIMES = ['09:30', '10:00', '10:30', '11:00'];
+
+export const isMondayBlockedTime = (time: string, selectedDate: Date): boolean => {
+  return selectedDate.getDay() === 1 && MONDAY_BLOCKED_TIMES.includes(time);
+};
+```
+
+Essa funcao sera importada em cada formulario para controlar a aparencia e interacao dos horarios.
+
+#### 2. Atualizar os 7 formularios com layout identico
+
+Arquivos afetados:
+- `src/pages/Index.tsx`
+- `src/pages/FeedCleitonQuerobin.tsx`
+- `src/pages/StoriesCleitonQuerobin.tsx`
+- `src/pages/YoutubeCleitonQuerobin.tsx`
+- `src/pages/StoriesJuliaOttoni.tsx`
+- `src/pages/FeedJuliaOttoni.tsx`
+- `src/pages/TrafegoPostagens.tsx`
+
+Em cada um, na secao onde os horarios sao renderizados (por volta da linha 704), adicionar:
+- Import de `isMondayBlockedTime` de `dateUtils.ts`
+- Verificacao `isBlocked` para cada horario
+- Se bloqueado: opacidade 30%, cursor nao permitido, sem acao ao clicar
+- Se nao bloqueado: comportamento normal (como esta hoje)
+
+Exemplo da mudanca no label de cada horario:
+
+```tsx
+{availableTimes.map((time) => {
+  const isBlocked = isMondayBlockedTime(time, new Date(formData.data_agendamento + 'T00:00:00'));
+  return (
+    <label
+      key={time}
+      className={`flex items-center justify-center p-3 md:p-4 rounded-lg transition font-semibold text-sm md:text-base ${
+        isBlocked
+          ? 'opacity-30 cursor-not-allowed bg-secondary border border-border text-white'
+          : formData.horario_agendamento === time
+            ? 'bg-primary text-white border border-primary cursor-pointer'
+            : 'bg-secondary border border-border text-white hover:bg-secondary/80 cursor-pointer'
+      }`}
+      onClick={() => !isBlocked && updateField('horario_agendamento', time)}
+    >
+      <input
+        type="radio"
+        name="horario"
+        value={time}
+        checked={formData.horario_agendamento === time}
+        onChange={() => !isBlocked && updateField('horario_agendamento', time)}
+        className="sr-only"
+        disabled={isBlocked}
+      />
+      {time}
+    </label>
+  );
+})}
+```
+
+#### 3. `src/pages/FormPage.tsx` - Formulario generico
+
+Este formulario usa um layout diferente (Buttons ao inves de labels). A mesma logica sera aplicada, desabilitando o botao e reduzindo a opacidade quando bloqueado.
+
+### Horarios bloqueados nas segundas-feiras
+
+| Horario | Status na segunda |
+|---------|-------------------|
+| 08:30   | Disponivel |
+| 09:00   | Disponivel |
+| **09:30** | **Bloqueado** |
+| **10:00** | **Bloqueado** |
+| **10:30** | **Bloqueado** |
+| **11:00** | **Bloqueado** |
+| 11:30   | Disponivel |
+| 13:30+  | Disponivel |
 
 ### Resumo
-Remover as etapas 10 (seleção de data) e 11 (seleção de horário) do formulário principal. A página de obrigado (que passará de step 12 para step 10) terá o box de data/hora substituído pelo texto: "Se você for selecionado nossa equipe irá entrar em contato com você no seu WhatsApp".
-
-### Alterações em `src/pages/Index.tsx`
-
-**1. Remover código desnecessário:**
-- Remover states: `availableDates`, `availableTimes`, `datesWithTimes`
-- Remover imports: `getNextWorkingDays`, `formatDateForDisplay`, `formatDateForDB`, `AVAILABLE_TIMES`, `filterAvailableTimes`, `isMondayBlockedTime`
-- Remover `useEffect` de fetch de datas (linhas 40-98)
-- Remover `useEffect` de fetch de horários por data (linhas 100-105)
-- Remover `useEffect` de polling de horários (linhas 107-118)
-- Remover função `fetchAvailableTimes` (linhas 170-215)
-
-**2. Ajustar validação (`validateStep`):**
-- Remover cases 10 e 11 (validação de data e horário)
-
-**3. Ajustar `handleNext`:**
-- Mudar limite de `step < 11` para `step < 9` — após step 9 (investimento), submeter
-- O botão no step 9 passa a ser "Finalizar" ao invés de "Continuar"
-
-**4. Ajustar `handleSubmit`:**
-- Mudar para `setStep(10)` (página de obrigado)
-- Remover lógica de voltar para step 11 em caso de conflito de horário
-
-**5. Remover renderização dos steps 10 e 11** (seleção de data e horário)
-
-**6. Reescrever página de obrigado (agora step 10):**
-- Remover box com data/horário e texto "informações adicionadas à agenda"
-- Substituir por texto: "Se você for selecionado nossa equipe irá entrar em contato com você no seu WhatsApp"
-- Manter: saudação "Obrigado!", vídeo Smartplayer, botão CTA
-
-**7. Ajustar rodapé:**
-- `step < 12` → `step < 10`
-- Botão no step 9: texto "Finalizar" (ou "Finalizando...")
-
-### Resultado
-- Formulário: 9 perguntas (nome → investimento) + página de obrigado
-- Sem agendamento de call
-- Página de obrigado com mensagem sobre contato via WhatsApp
-
+- 1 funcao auxiliar nova em `dateUtils.ts`
+- 8 formularios atualizados com a mesma logica
+- Horarios bloqueados aparecem visiveis mas com opacidade baixa e nao clicaveis
+- Nenhuma alteracao no banco de dados necessaria
