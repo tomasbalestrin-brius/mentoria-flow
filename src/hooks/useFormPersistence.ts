@@ -64,7 +64,10 @@ export const useFormPersistence = (formType: string = 'bio') => {
       formData.data_agendamento || '',
       formData.horario_agendamento || '',
       isComplete ? 'Completo' : 'Incompleto',
-      step.toString()
+      step.toString(),
+      formData.meta_carreira || '',
+      formData.dificuldades_objetivo || '',
+      formData.por_que_escolhida || ''
     ];
   };
 
