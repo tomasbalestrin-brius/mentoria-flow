@@ -10,6 +10,7 @@ import YoutubeCleitonQuerobin from "./pages/YoutubeCleitonQuerobin";
 import StoriesJuliaOttoni from "./pages/StoriesJuliaOttoni";
 import FeedJuliaOttoni from "./pages/FeedJuliaOttoni";
 import TrafegoPostagens from "./pages/TrafegoPostagens";
+import BioJuliaOttoni from "./pages/BioJuliaOttoni";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
@@ -42,6 +43,9 @@ const App = () => (
           
           {/* Trafego Postagens - Formulário duplicado */}
           <Route path="/trafego-postagens" element={<TrafegoPostagens />} />
+          
+          {/* Bio Julia Ottoni - Formulário duplicado */}
+          <Route path="/bio-julia-ottoni" element={<BioJuliaOttoni />} />
           
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />
