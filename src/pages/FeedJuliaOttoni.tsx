@@ -793,7 +793,7 @@ const FeedJuliaOttoni = () => {
           {/* Botão CTA */}
           <div className="text-center pt-2 md:pt-4">
             <a
-              href="https://lp.bethelescoladenegocios.com.br/bethel-educacao-pag-ot-v1-h1"
+              href="https://betheleducacao.com.br/"
               className="inline-block px-6 md:px-8 py-3 md:py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition text-base md:text-lg"
             >
               Conheça nossos programas
