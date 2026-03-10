@@ -30,6 +30,17 @@ const SPREADSHEET_IDS: Record<string, string> = {
   'bio-julia-ottoni': '1oymvv7cBG4UX09BfDVqNajot0EVH5tUsOwHB2lM7iMA'
 };
 
+const FINAL_STEP_BY_FORM_TYPE: Record<string, number> = {
+  bio: 9,
+  'bio-julia-ottoni': 12,
+  'feed-cleiton-querobin': 11,
+  'stories-cleiton-querobin': 11,
+  'youtube-cleiton-querobin': 11,
+  'stories-julia-ottoni': 11,
+  'feed-julia-ottoni': 11,
+  'trafego-postagens': 11,
+};
+
 export const useFormPersistence = (formType: string = 'bio') => {
   const [isSaving, setIsSaving] = useState(false);
   
