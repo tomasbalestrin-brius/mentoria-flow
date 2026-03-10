@@ -14,6 +14,9 @@ export interface FormData {
   investimento: string;
   data_agendamento: string;
   horario_agendamento: string;
+  meta_carreira?: string;
+  dificuldades_objetivo?: string;
+  por_que_escolhida?: string;
 }
 
 const SPREADSHEET_IDS: Record<string, string> = {
