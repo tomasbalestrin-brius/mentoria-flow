@@ -56,14 +56,17 @@ export type Database = {
           created_at: string | null
           data_agendamento: string | null
           dificuldade: string | null
+          dificuldades_objetivo: string | null
           email: string | null
           faturamento: string | null
           horario_agendamento: string | null
           id: string
           instagram: string | null
           investimento: string | null
+          meta_carreira: string | null
           nicho: string | null
           nome: string | null
+          por_que_escolhida: string | null
           sheet_row_id: number | null
           status: string | null
           telefone: string | null
@@ -76,14 +79,17 @@ export type Database = {
           created_at?: string | null
           data_agendamento?: string | null
           dificuldade?: string | null
+          dificuldades_objetivo?: string | null
           email?: string | null
           faturamento?: string | null
           horario_agendamento?: string | null
           id?: string
           instagram?: string | null
           investimento?: string | null
+          meta_carreira?: string | null
           nicho?: string | null
           nome?: string | null
+          por_que_escolhida?: string | null
           sheet_row_id?: number | null
           status?: string | null
           telefone?: string | null
@@ -96,14 +102,17 @@ export type Database = {
           created_at?: string | null
           data_agendamento?: string | null
           dificuldade?: string | null
+          dificuldades_objetivo?: string | null
           email?: string | null
           faturamento?: string | null
           horario_agendamento?: string | null
           id?: string
           instagram?: string | null
           investimento?: string | null
+          meta_carreira?: string | null
           nicho?: string | null
           nome?: string | null
+          por_que_escolhida?: string | null
           sheet_row_id?: number | null
           status?: string | null
           telefone?: string | null
