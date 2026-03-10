@@ -1,44 +1,94 @@
 
-Diagnóstico direto do erro (com evidência):
-- O erro não é mais coluna faltando. As colunas novas já existem no banco.
-- O backend está retornando repetidamente: `invalid input syntax for type date: ""` (visto nos logs recentes).
-- Isso explica os `400` no save automático e no botão Finalizar.
 
-Por que isso acontece no código:
-1) Em `src/pages/BioJuliaOttoni.tsx`, o formulário não coleta mais `data_agendamento`/`horario_agendamento`.
-2) Mesmo assim, no `useFormPersistence.saveProgress`, o payload enviado para `aplicacoes_mentoria` inclui esses campos como string vazia (`''`).
-3) No banco, `data_agendamento` é `date` e `horario_agendamento` é `time`; `''` é inválido para esses tipos (aceita `NULL`, não string vazia).
-4) Além disso, `completeForm` ainda executa fluxo de agendamento (validação em `agendamentos`, insert em `agendamentos`, calendário), o que também depende de data/hora válidas.
+## Bloquear horarios de segunda-feira (9:30 - 11:00) em todos os formularios
 
-Plano de correção:
-1) Normalizar payload antes de salvar progresso (`saveProgress`):
-- Converter `data_agendamento: ''` para `null`.
-- Converter `horario_agendamento: ''` para `null`.
-- Manter strings válidas quando houver agendamento real.
-- Resultado: inserts/updates deixam de quebrar com 400.
+### Contexto
+Todos os 8 formularios com agendamento usam a funcao `filterAvailableTimes` de `src/lib/dateUtils.ts` e renderizam os horarios de forma similar. Os horarios 09:30, 10:00, 10:30 e 11:00 devem aparecer com opacidade baixa e nao podem ser clicados quando a data selecionada for uma segunda-feira.
 
-2) Tornar `completeForm` compatível com formulários sem agenda:
-- Criar flag `hasSchedulingData = !!(formData.data_agendamento && formData.horario_agendamento)`.
-- Se `hasSchedulingData` for `false`:
-  - apenas marcar aplicação como `Completo` em `aplicacoes_mentoria`;
-  - pular validação/insert em `agendamentos`;
-  - pular criação de evento de calendário.
-- Se `true`, manter fluxo atual de agendamento.
+### Alteracoes
 
-3) Ajuste de consistência na sincronização de planilha:
-- Hoje `syncWithSheets(formData, 12, true)` está fixo.
-- Tornar esse step final parametrizável para refletir corretamente cada rota (ex.: `/bio` finaliza em 9, `/bio-julia-ottoni` em 12).
+#### 1. `src/lib/dateUtils.ts` - Adicionar funcao auxiliar
 
-4) Revisão de regressão:
-- Aplicar a correção de forma genérica no hook (beneficia `/bio-julia-ottoni` e também `/` que está no mesmo risco após remoção de agenda).
-- Sem necessidade de nova migração de schema para este erro específico.
+Criar e exportar uma nova funcao `isMondayBlockedTime` que verifica se um horario esta bloqueado para segundas-feiras:
 
-Validação após correção:
-1) Preencher `/bio-julia-ottoni` até o fim.
-2) Confirmar ausência de `400` no network.
-3) Confirmar criação/atualização em `aplicacoes_mentoria` com:
-- `tipo_formulario='bio-julia-ottoni'`
-- `data_agendamento = null`
-- `horario_agendamento = null`
-- novos campos textuais preenchidos.
-4) Confirmar página de obrigado abrindo normalmente.
+```typescript
+const MONDAY_BLOCKED_TIMES = ['09:30', '10:00', '10:30', '11:00'];
+
+export const isMondayBlockedTime = (time: string, selectedDate: Date): boolean => {
+  return selectedDate.getDay() === 1 && MONDAY_BLOCKED_TIMES.includes(time);
+};
+```
+
+Essa funcao sera importada em cada formulario para controlar a aparencia e interacao dos horarios.
+
+#### 2. Atualizar os 7 formularios com layout identico
+
+Arquivos afetados:
+- `src/pages/Index.tsx`
+- `src/pages/FeedCleitonQuerobin.tsx`
+- `src/pages/StoriesCleitonQuerobin.tsx`
+- `src/pages/YoutubeCleitonQuerobin.tsx`
+- `src/pages/StoriesJuliaOttoni.tsx`
+- `src/pages/FeedJuliaOttoni.tsx`
+- `src/pages/TrafegoPostagens.tsx`
+
+Em cada um, na secao onde os horarios sao renderizados (por volta da linha 704), adicionar:
+- Import de `isMondayBlockedTime` de `dateUtils.ts`
+- Verificacao `isBlocked` para cada horario
+- Se bloqueado: opacidade 30%, cursor nao permitido, sem acao ao clicar
+- Se nao bloqueado: comportamento normal (como esta hoje)
+
+Exemplo da mudanca no label de cada horario:
+
+```tsx
+{availableTimes.map((time) => {
+  const isBlocked = isMondayBlockedTime(time, new Date(formData.data_agendamento + 'T00:00:00'));
+  return (
+    <label
+      key={time}
+      className={`flex items-center justify-center p-3 md:p-4 rounded-lg transition font-semibold text-sm md:text-base ${
+        isBlocked
+          ? 'opacity-30 cursor-not-allowed bg-secondary border border-border text-white'
+          : formData.horario_agendamento === time
+            ? 'bg-primary text-white border border-primary cursor-pointer'
+            : 'bg-secondary border border-border text-white hover:bg-secondary/80 cursor-pointer'
+      }`}
+      onClick={() => !isBlocked && updateField('horario_agendamento', time)}
+    >
+      <input
+        type="radio"
+        name="horario"
+        value={time}
+        checked={formData.horario_agendamento === time}
+        onChange={() => !isBlocked && updateField('horario_agendamento', time)}
+        className="sr-only"
+        disabled={isBlocked}
+      />
+      {time}
+    </label>
+  );
+})}
+```
+
+#### 3. `src/pages/FormPage.tsx` - Formulario generico
+
+Este formulario usa um layout diferente (Buttons ao inves de labels). A mesma logica sera aplicada, desabilitando o botao e reduzindo a opacidade quando bloqueado.
+
+### Horarios bloqueados nas segundas-feiras
+
+| Horario | Status na segunda |
+|---------|-------------------|
+| 08:30   | Disponivel |
+| 09:00   | Disponivel |
+| **09:30** | **Bloqueado** |
+| **10:00** | **Bloqueado** |
+| **10:30** | **Bloqueado** |
+| **11:00** | **Bloqueado** |
+| 11:30   | Disponivel |
+| 13:30+  | Disponivel |
+
+### Resumo
+- 1 funcao auxiliar nova em `dateUtils.ts`
+- 8 formularios atualizados com a mesma logica
+- Horarios bloqueados aparecem visiveis mas com opacidade baixa e nao clicaveis
+- Nenhuma alteracao no banco de dados necessaria
