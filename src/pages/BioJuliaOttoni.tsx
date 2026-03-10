@@ -18,6 +18,9 @@ const BioJuliaOttoni = () => {
     investimento: '',
     data_agendamento: '',
     horario_agendamento: '',
+    meta_carreira: '',
+    dificuldades_objetivo: '',
+    por_que_escolhida: '',
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +60,7 @@ const BioJuliaOttoni = () => {
 
   // Carregar script do Smartplayer quando chegar na página de agradecimento
   useEffect(() => {
-    if (step === 10 && videoContainerRef.current) {
+    if (step === 13 && videoContainerRef.current) {
       const existingScript = document.getElementById('smartplayer-script');
       if (!existingScript) {
         const script = document.createElement('script');
@@ -126,14 +129,28 @@ const BioJuliaOttoni = () => {
           setError('Por favor, selecione uma opção');
           return false;
         }
-        if (formData.dificuldade === 'Outro' && !formData.outraDificuldade?.trim()) {
-          setError('Por favor, descreva sua dificuldade');
-          return false;
-        }
         break;
       case 9:
         if (!formData.investimento) {
           setError('Por favor, selecione uma opção');
+          return false;
+        }
+        break;
+      case 10:
+        if (!formData.meta_carreira?.trim()) {
+          setError('Por favor, responda esta pergunta');
+          return false;
+        }
+        break;
+      case 11:
+        if (!formData.dificuldades_objetivo?.trim()) {
+          setError('Por favor, responda esta pergunta');
+          return false;
+        }
+        break;
+      case 12:
+        if (!formData.por_que_escolhida?.trim()) {
+          setError('Por favor, responda esta pergunta');
           return false;
         }
         break;
@@ -151,7 +168,7 @@ const BioJuliaOttoni = () => {
       console.error('Error saving progress:', error);
     }
     
-    if (step < 9) {
+    if (step < 12) {
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -163,7 +180,7 @@ const BioJuliaOttoni = () => {
     setIsSubmitting(true);
     try {
       await completeForm(formData);
-      setStep(10);
+      setStep(13);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
       console.error('Error completing form:', error);
@@ -378,13 +395,12 @@ const BioJuliaOttoni = () => {
 
     if (step === 8) {
       const dificuldades = [
-        'Não consigo atrair leads qualificados de forma consistente.',
-        'Tenho dificuldade em converter os leads que chegam em vendas.',
-        'Estou preso demais na operação e não consigo focar no crescimento.',
-        'Meu negócio até cresce, mas sem estrutura, equipe ou processos sólidos.',
-        'Não tenho clareza dos números e isso trava minhas decisões.',
-        'Meu negócio cresce, mas quero multiplicar com mais método e previsibilidade.',
-        'Outro'
+        'Posicionamento',
+        'Atração de Clientes',
+        'Visibilidade',
+        'Criar Conteúdos',
+        'Planejamento',
+        'Vendas'
       ];
       return (
         <div className="space-y-6">
@@ -413,15 +429,6 @@ const BioJuliaOttoni = () => {
                 </label>
               ))}
             </div>
-            {formData.dificuldade === 'Outro' && (
-              <textarea
-                value={formData.outraDificuldade}
-                onChange={(e) => updateField('outraDificuldade', e.target.value)}
-                placeholder="Descreva sua principal dificuldade..."
-                className="w-full mt-4 px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
-                rows={4}
-              />
-            )}
           </div>
         </div>
       );
@@ -466,10 +473,62 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    // Página de Agradecimento
     if (step === 10) {
-      const firstName = formData.nome.split(' ')[0];
-      
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">O que você deseja alcançar com sua carreira e faturamento nos próximos 12 meses?</h2>
+            <textarea
+              value={formData.meta_carreira || ''}
+              onChange={(e) => updateField('meta_carreira', e.target.value)}
+              placeholder="Descreva seus objetivos..."
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground resize-none"
+              rows={5}
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (step === 11) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Quais dificuldades está enfrentando para alcançar esse objetivo?</h2>
+            <textarea
+              value={formData.dificuldades_objetivo || ''}
+              onChange={(e) => updateField('dificuldades_objetivo', e.target.value)}
+              placeholder="Descreva suas dificuldades..."
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground resize-none"
+              rows={5}
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (step === 12) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Por que você acredita que deveria ser escolhida para uma consultoria individual com o time da Julia Ottoni?</h2>
+            <textarea
+              value={formData.por_que_escolhida || ''}
+              onChange={(e) => updateField('por_que_escolhida', e.target.value)}
+              placeholder="Conte-nos o motivo..."
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground resize-none"
+              rows={5}
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // Página de Agradecimento
+    if (step === 13) {
       return (
         <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
           <div className="flex gap-3 md:gap-4 items-start">
@@ -532,7 +591,7 @@ const BioJuliaOttoni = () => {
             </div>
           )}
           
-          {step < 10 && (
+          {step < 13 && (
             <div className="flex justify-between items-center mt-8">
               {step > 1 ? (
                 <button
@@ -550,12 +609,12 @@ const BioJuliaOttoni = () => {
                 disabled={isSubmitting}
                 className="px-5 md:px-8 py-[15px] md:py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
               >
-                {step === 9 ? (isSubmitting ? 'Finalizando...' : 'Finalizar') : 'Continuar'}
+                {step === 12 ? (isSubmitting ? 'Finalizando...' : 'Finalizar') : 'Continuar'}
               </button>
             </div>
           )}
           
-          {isSaving && step < 10 && (
+          {isSaving && step < 13 && (
             <div className="mt-4 text-center">
               <p className="text-xs md:text-sm text-muted-foreground">
                 Salvando automaticamente...
