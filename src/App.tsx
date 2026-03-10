@@ -44,6 +44,9 @@ const App = () => (
           {/* Trafego Postagens - Formulário duplicado */}
           <Route path="/trafego-postagens" element={<TrafegoPostagens />} />
           
+          {/* Bio Julia Ottoni - Formulário duplicado */}
+          <Route path="/bio-julia-ottoni" element={<BioJuliaOttoni />} />
+          
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />
           

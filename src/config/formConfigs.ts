@@ -119,5 +119,18 @@ export const formConfigs: Record<string, FormConfig> = {
     googleSheet: {
       spreadsheetId: '1cuMG8qVGl2YB4eZXqfqDrIIlvqCiQYosmMoMTEEjRHI'
     }
+  },
+  'bio-julia-ottoni': {
+    id: 'bio-julia-ottoni',
+    title: 'Bio Julia Ottoni',
+    description: 'Aplicação para Mentoria - Bio Julia Ottoni',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '1oymvv7cBG4UX09BfDVqNajot0EVH5tUsOwHB2lM7iMA'
+    }
   }
 };
