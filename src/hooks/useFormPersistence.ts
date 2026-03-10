@@ -195,22 +195,29 @@ export const useFormPersistence = (formType: string = 'bio') => {
 
   const completeForm = async (formData: FormData) => {
     try {
-      // VALIDAÇÃO: Verificar se o horário ainda está disponível antes de tentar agendar
-      console.log('Validating time slot availability...');
-      const { data: existingBooking, error: checkError } = await supabase
-        .from('agendamentos')
-        .select('id')
-        .eq('data_agendamento', formData.data_agendamento)
-        .eq('horario_agendamento', formData.horario_agendamento)
-        .eq('tipo_formulario', formType)
-        .maybeSingle();
+      const hasSchedulingData = !!(
+        formData.data_agendamento?.trim() &&
+        formData.horario_agendamento?.trim()
+      );
 
-      if (checkError) {
-        console.error('Error checking availability:', checkError);
-      }
+      if (hasSchedulingData) {
+        // VALIDAÇÃO: Verificar se o horário ainda está disponível antes de tentar agendar
+        console.log('Validating time slot availability...');
+        const { data: existingBooking, error: checkError } = await supabase
+          .from('agendamentos')
+          .select('id')
+          .eq('data_agendamento', formData.data_agendamento)
+          .eq('horario_agendamento', formData.horario_agendamento)
+          .eq('tipo_formulario', formType)
+          .maybeSingle();
 
-      if (existingBooking) {
-        throw new Error('Este horário já está agendado. Por favor, escolha outro horário.');
+        if (checkError) {
+          console.error('Error checking availability:', checkError);
+        }
+
+        if (existingBooking) {
+          throw new Error('Este horário já está agendado. Por favor, escolha outro horário.');
+        }
       }
 
       // Atualizar status para completo
@@ -218,69 +225,72 @@ export const useFormPersistence = (formType: string = 'bio') => {
       if (currentRecordId) {
         const { error } = await supabase
           .from('aplicacoes_mentoria')
-          .update({ 
+          .update({
             status: 'Completo',
-            data_agendamento: formData.data_agendamento,
-            horario_agendamento: formData.horario_agendamento,
+            data_agendamento: hasSchedulingData ? formData.data_agendamento : null,
+            horario_agendamento: hasSchedulingData ? formData.horario_agendamento : null,
             tipo_formulario: formType,
           })
           .eq('id', currentRecordId);
-        
+
         if (error) throw error;
       }
 
-      // Criar agendamento na tabela de agendamentos
-      const { error: agendamentoError } = await supabase
-        .from('agendamentos')
-        .insert({
-          nome_cliente: formData.nome,
-          email_cliente: formData.email,
-          telefone_cliente: formData.telefone,
-          data_agendamento: formData.data_agendamento!,
-          horario_agendamento: formData.horario_agendamento!,
-          status: 'Completo',
-          tipo_formulario: formType,
-        });
+      if (hasSchedulingData) {
+        // Criar agendamento na tabela de agendamentos
+        const { error: agendamentoError } = await supabase
+          .from('agendamentos')
+          .insert({
+            nome_cliente: formData.nome,
+            email_cliente: formData.email,
+            telefone_cliente: formData.telefone,
+            data_agendamento: formData.data_agendamento!,
+            horario_agendamento: formData.horario_agendamento!,
+            status: 'Completo',
+            tipo_formulario: formType,
+          });
 
-      if (agendamentoError) {
-        if (agendamentoError.code === '23505') {
-          throw new Error('Este horário já está agendado. Por favor, escolha outro horário.');
-        }
-        throw agendamentoError;
-      }
-
-      // Criar evento no Google Calendar
-      try {
-        const { error: calendarError } = await supabase.functions.invoke('create-calendar-event', {
-          body: {
-            clientName: formData.nome,
-            clientEmail: formData.email,
-            clientPhone: formData.telefone,
-            date: formData.data_agendamento,
-            time: formData.horario_agendamento,
-            formData: {
-              nicho: formData.nicho,
-              cargo: formData.cargo,
-              faturamento: formData.faturamento,
-              dificuldade: formData.dificuldade,
-              investimento: formData.investimento
-            }
+        if (agendamentoError) {
+          if (agendamentoError.code === '23505') {
+            throw new Error('Este horário já está agendado. Por favor, escolha outro horário.');
           }
-        });
-
-        if (calendarError) {
-          console.error('Error creating calendar event:', calendarError);
-          // Não falhar o fluxo completo se o Calendar falhar
-          // O agendamento já foi salvo no Supabase
+          throw agendamentoError;
         }
-      } catch (calendarError) {
-        console.error('Error calling calendar function:', calendarError);
-        // Continuar mesmo se o Calendar falhar
+
+        // Criar evento no Google Calendar
+        try {
+          const { error: calendarError } = await supabase.functions.invoke('create-calendar-event', {
+            body: {
+              clientName: formData.nome,
+              clientEmail: formData.email,
+              clientPhone: formData.telefone,
+              date: formData.data_agendamento,
+              time: formData.horario_agendamento,
+              formData: {
+                nicho: formData.nicho,
+                cargo: formData.cargo,
+                faturamento: formData.faturamento,
+                dificuldade: formData.dificuldade,
+                investimento: formData.investimento
+              }
+            }
+          });
+
+          if (calendarError) {
+            console.error('Error creating calendar event:', calendarError);
+            // Não falhar o fluxo completo se o Calendar falhar
+            // O agendamento já foi salvo no Supabase
+          }
+        } catch (calendarError) {
+          console.error('Error calling calendar function:', calendarError);
+          // Continuar mesmo se o Calendar falhar
+        }
       }
 
       // Sincronizar com Google Sheets com status completo
-      await syncWithSheets(formData, 12, true);
-      
+      const finalStep = FINAL_STEP_BY_FORM_TYPE[formType] ?? 11;
+      await syncWithSheets(formData, finalStep, true);
+
       // Limpar localStorage após conclusão (isolado por tipo)
       localStorage.removeItem(`formRecordId_${formType}`);
       localStorage.removeItem(`formSheetRowId_${formType}`);
