@@ -132,5 +132,18 @@ export const formConfigs: Record<string, FormConfig> = {
     googleSheet: {
       spreadsheetId: '1oymvv7cBG4UX09BfDVqNajot0EVH5tUsOwHB2lM7iMA'
     }
+  },
+  'intensivo': {
+    id: 'intensivo',
+    title: 'Intensivo',
+    description: 'Aplicação para Mentoria - Intensivo',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '1LBhKreB3dIEeavbLINZzLS5GknYndhesKyzwW6Gw76o'
+    }
   }
 };

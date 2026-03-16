@@ -48,6 +48,9 @@ const App = () => (
           {/* Bio Julia Ottoni - Formulário duplicado */}
           <Route path="/bio-julia-ottoni" element={<BioJuliaOttoni />} />
           
+          {/* Intensivo - Formulário duplicado do Bio */}
+          <Route path="/intensivo" element={<Intensivo />} />
+          
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />
           
