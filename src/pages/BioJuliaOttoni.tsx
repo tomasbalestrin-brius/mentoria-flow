@@ -60,7 +60,7 @@ const BioJuliaOttoni = () => {
 
   // Carregar script do Smartplayer quando chegar na página de agradecimento
   useEffect(() => {
-    if (step === 14 && videoContainerRef.current) {
+    if (step === 13 && videoContainerRef.current) {
       const existingScript = document.getElementById('smartplayer-script');
       if (!existingScript) {
         const script = document.createElement('script');
@@ -84,77 +84,75 @@ const BioJuliaOttoni = () => {
       case 0:
         return true;
       case 1:
-        return true;
-      case 2:
         if (!formData.nome.trim() || formData.nome.trim().length < 3) {
           setError('Por favor, digite seu nome completo (mínimo 3 caracteres)');
           return false;
         }
         break;
-      case 3:
+      case 2:
         const phoneDigits = formData.telefone.replace(/\D/g, '');
         if (phoneDigits.length < 10) {
           setError('Por favor, digite um telefone válido com DDD');
           return false;
         }
         break;
-      case 4:
+      case 3:
         if (!validateEmail(formData.email)) {
           setError('Por favor, digite um e-mail válido');
           return false;
         }
         break;
-      case 5:
+      case 4:
         if (!formData.instagram.trim()) {
           setError('Por favor, digite seu Instagram');
           return false;
         }
         break;
-      case 6:
+      case 5:
         if (!formData.nicho.trim()) {
           setError('Por favor, digite seu nicho de atuação');
           return false;
         }
         break;
-      case 7:
+      case 6:
         if (!formData.cargo) {
           setError('Por favor, selecione seu cargo');
           return false;
         }
         break;
-      case 8:
+      case 7:
         if (!formData.faturamento) {
           setError('Por favor, selecione seu faturamento');
           return false;
         }
         break;
-      case 9:
+      case 8:
         if (!formData.dificuldade) {
           setError('Por favor, selecione uma opção');
           return false;
         }
         break;
-      case 10:
-        if (!formData.investimento) {
-          setError('Por favor, selecione uma opção');
-          return false;
-        }
-        break;
-      case 11:
+      case 9:
         if (!formData.meta_carreira?.trim()) {
           setError('Por favor, responda esta pergunta');
           return false;
         }
         break;
-      case 12:
+      case 10:
         if (!formData.dificuldades_objetivo?.trim()) {
           setError('Por favor, responda esta pergunta');
           return false;
         }
         break;
-      case 13:
+      case 11:
         if (!formData.por_que_escolhida?.trim()) {
           setError('Por favor, responda esta pergunta');
+          return false;
+        }
+        break;
+      case 12:
+        if (!formData.investimento) {
+          setError('Por favor, selecione uma opção');
           return false;
         }
         break;
@@ -172,7 +170,7 @@ const BioJuliaOttoni = () => {
       console.error('Error saving progress:', error);
     }
     
-    if (step < 13) {
+    if (step < 12) {
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -184,7 +182,7 @@ const BioJuliaOttoni = () => {
     setIsSubmitting(true);
     try {
       await completeForm(formData);
-      setStep(14);
+      setStep(13);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
       console.error('Error completing form:', error);
@@ -243,9 +241,6 @@ const BioJuliaOttoni = () => {
     if (step === 1) {
       return (
         <div className="space-y-6">
-          <p className="text-sm md:text-lg text-muted-foreground">
-            Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil.
-          </p>
           <div>
             <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Qual é o seu nome completo?</h2>
             <input
@@ -261,7 +256,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 3) {
+    if (step === 2) {
       return (
         <div className="space-y-6">
           <div>
@@ -285,7 +280,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 4) {
+    if (step === 3) {
       return (
         <div className="space-y-6">
           <div>
@@ -303,7 +298,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 5) {
+    if (step === 4) {
       return (
         <div className="space-y-6">
           <div>
@@ -326,7 +321,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 6) {
+    if (step === 5) {
       return (
         <div className="space-y-6">
           <div>
@@ -344,7 +339,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 7) {
+    if (step === 6) {
       const cargos = ['Dono', 'Gerente', 'Autônomo', 'Colaborador', 'Vendedor'];
       return (
         <div className="space-y-6">
@@ -378,7 +373,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 8) {
+    if (step === 7) {
       const faturamentos = [
         'Ainda não fatura',
         '5-15k',
@@ -420,7 +415,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 9) {
+    if (step === 8) {
       const dificuldades = [
         'Posicionamento',
         'Atração de Clientes',
@@ -461,7 +456,61 @@ const BioJuliaOttoni = () => {
       );
     }
 
+    if (step === 9) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">O que você deseja alcançar com sua carreira e faturamento nos próximos 12 meses?</h2>
+            <textarea
+              value={formData.meta_carreira || ''}
+              onChange={(e) => updateField('meta_carreira', e.target.value)}
+              placeholder="Descreva seus objetivos..."
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
+              rows={5}
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
     if (step === 10) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Quais dificuldades está enfrentando para alcançar esse objetivo?</h2>
+            <textarea
+              value={formData.dificuldades_objetivo || ''}
+              onChange={(e) => updateField('dificuldades_objetivo', e.target.value)}
+              placeholder="Descreva suas dificuldades..."
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
+              rows={5}
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (step === 11) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Por que você acredita que deveria ser escolhida para uma consultoria individual com o time da Julia Ottoni?</h2>
+            <textarea
+              value={formData.por_que_escolhida || ''}
+              onChange={(e) => updateField('por_que_escolhida', e.target.value)}
+              placeholder="Conte-nos o motivo..."
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
+              rows={5}
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (step === 12) {
       const investimentos = [
         'Quero avaliar opções de parcelamento',
         'Ainda não estou decidido, quero mais Informações',
@@ -500,69 +549,15 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 11) {
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">O que você deseja alcançar com sua carreira e faturamento nos próximos 12 meses?</h2>
-            <textarea
-              value={formData.meta_carreira || ''}
-              onChange={(e) => updateField('meta_carreira', e.target.value)}
-              placeholder="Descreva seus objetivos..."
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
-              rows={5}
-              autoFocus
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (step === 12) {
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Quais dificuldades está enfrentando para alcançar esse objetivo?</h2>
-            <textarea
-              value={formData.dificuldades_objetivo || ''}
-              onChange={(e) => updateField('dificuldades_objetivo', e.target.value)}
-              placeholder="Descreva suas dificuldades..."
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
-              rows={5}
-              autoFocus
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (step === 13) {
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Por que você acredita que deveria ser escolhida para uma consultoria individual com o time da Julia Ottoni?</h2>
-            <textarea
-              value={formData.por_que_escolhida || ''}
-              onChange={(e) => updateField('por_que_escolhida', e.target.value)}
-              placeholder="Conte-nos o motivo..."
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
-              rows={5}
-              autoFocus
-            />
-          </div>
-        </div>
-      );
-    }
-
     // Página de Agradecimento
-    if (step === 14) {
+    if (step === 13) {
       return (
         <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
           <div className="flex gap-3 md:gap-4 items-start">
             <div className="w-1 h-12 md:h-16 bg-primary rounded-full flex-shrink-0" />
             <div>
-              <h1 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-4">Obrigado!</h1>
-              <p className="text-base md:text-lg text-gray-300">
+              <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-2 md:mb-4">Obrigado!</h1>
+              <p className="text-base md:text-lg text-muted-foreground">
                 Sua aplicação foi enviada com sucesso.
               </p>
             </div>
@@ -575,7 +570,7 @@ const BioJuliaOttoni = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </div>
-              <p className="text-white font-semibold text-sm md:text-base">
+              <p className="text-foreground font-semibold text-sm md:text-base">
                 Se você for selecionado nossa equipe irá entrar em contato com você no seu WhatsApp
               </p>
             </div>
@@ -592,7 +587,7 @@ const BioJuliaOttoni = () => {
           <div className="text-center pt-2 md:pt-4">
             <a
               href="https://betheleducacao.com.br/"
-              className="inline-block px-6 md:px-8 py-3 md:py-4 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition text-base md:text-lg"
+              className="inline-block px-6 md:px-8 py-3 md:py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition text-base md:text-lg"
             >
               Conheça nossos programas
             </a>
@@ -618,7 +613,7 @@ const BioJuliaOttoni = () => {
             </div>
           )}
           
-          {step > 0 && step < 14 && (
+          {step > 0 && step < 13 && (
             <div className="flex justify-between items-center mt-8">
               {step > 1 ? (
                 <button
@@ -634,14 +629,14 @@ const BioJuliaOttoni = () => {
               <button
                 onClick={handleNext}
                 disabled={isSubmitting}
-                className="px-5 md:px-8 py-[15px] md:py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
+                className="px-5 md:px-8 py-[15px] md:py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
               >
-                {step === 13 ? (isSubmitting ? 'Finalizando...' : 'Finalizar') : 'Continuar'}
+                {step === 12 ? (isSubmitting ? 'Finalizando...' : 'Finalizar') : 'Continuar'}
               </button>
             </div>
           )}
           
-          {isSaving && step > 0 && step < 14 && (
+          {isSaving && step > 0 && step < 13 && (
             <div className="mt-4 text-center">
               <p className="text-xs md:text-sm text-muted-foreground">
                 Salvando automaticamente...
