@@ -4,7 +4,7 @@ import { useFormPersistence, FormData } from '@/hooks/useFormPersistence';
 import { toast } from 'sonner';
 
 const BioJuliaOttoni = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     nome: '',
     telefone: '',
@@ -60,7 +60,7 @@ const BioJuliaOttoni = () => {
 
   // Carregar script do Smartplayer quando chegar na página de agradecimento
   useEffect(() => {
-    if (step === 13 && videoContainerRef.current) {
+    if (step === 14 && videoContainerRef.current) {
       const existingScript = document.getElementById('smartplayer-script');
       if (!existingScript) {
         const script = document.createElement('script');
@@ -81,13 +81,17 @@ const BioJuliaOttoni = () => {
     setError('');
     
     switch (step) {
+      case 0:
+        return true;
       case 1:
+        return true;
+      case 2:
         if (!formData.nome.trim() || formData.nome.trim().length < 3) {
           setError('Por favor, digite seu nome completo (mínimo 3 caracteres)');
           return false;
         }
         break;
-      case 2:
+      case 3:
         const phoneDigits = formData.telefone.replace(/\D/g, '');
         if (phoneDigits.length < 10) {
           setError('Por favor, digite um telefone válido com DDD');
