@@ -27,7 +27,7 @@ const SPREADSHEET_IDS: Record<string, string> = {
   'stories-julia-ottoni': '133gBqiRXlPTG1kDN_Zo0G4RaOFZjn_unuqcApqFakZg',
   'feed-julia-ottoni': '10p8wQKI2gBKK8kwhQ2vqzQ_xIMcFpvOJQmwkUMbkMZw',
   'trafego-postagens': '1cuMG8qVGl2YB4eZXqfqDrIIlvqCiQYosmMoMTEEjRHI',
-  'bio-julia-ottoni': '1oymvv7cBG4UX09BfDVqNajot0EVH5tUsOwHB2lM7iMA',
+  'bio-julia-ottoni': '1nJSREl7-zyCn4xEp_hkV8a1omp8mfFefZN0k5C5ilbE',
   'intensivo': '1LBhKreB3dIEeavbLINZzLS5GknYndhesKyzwW6Gw76o'
 };
 

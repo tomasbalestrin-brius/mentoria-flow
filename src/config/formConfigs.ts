@@ -130,7 +130,7 @@ export const formConfigs: Record<string, FormConfig> = {
       availableTimes: []
     },
     googleSheet: {
-      spreadsheetId: '1oymvv7cBG4UX09BfDVqNajot0EVH5tUsOwHB2lM7iMA'
+      spreadsheetId: '1nJSREl7-zyCn4xEp_hkV8a1omp8mfFefZN0k5C5ilbE'
     }
   },
   'intensivo': {
