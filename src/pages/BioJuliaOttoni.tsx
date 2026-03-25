@@ -170,7 +170,7 @@ const BioJuliaOttoni = () => {
       console.error('Error saving progress:', error);
     }
     
-    if (step < 13) {
+    if (step < 12) {
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -182,7 +182,7 @@ const BioJuliaOttoni = () => {
     setIsSubmitting(true);
     try {
       await completeForm(formData);
-      setStep(14);
+      setStep(13);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
       console.error('Error completing form:', error);
