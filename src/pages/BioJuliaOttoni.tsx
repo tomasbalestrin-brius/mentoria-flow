@@ -60,7 +60,7 @@ const BioJuliaOttoni = () => {
 
   // Carregar script do Smartplayer quando chegar na página de agradecimento
   useEffect(() => {
-    if (step === 14 && videoContainerRef.current) {
+    if (step === 13 && videoContainerRef.current) {
       const existingScript = document.getElementById('smartplayer-script');
       if (!existingScript) {
         const script = document.createElement('script');
