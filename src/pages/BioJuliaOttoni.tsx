@@ -84,77 +84,75 @@ const BioJuliaOttoni = () => {
       case 0:
         return true;
       case 1:
-        return true;
-      case 2:
         if (!formData.nome.trim() || formData.nome.trim().length < 3) {
           setError('Por favor, digite seu nome completo (mínimo 3 caracteres)');
           return false;
         }
         break;
-      case 3:
+      case 2:
         const phoneDigits = formData.telefone.replace(/\D/g, '');
         if (phoneDigits.length < 10) {
           setError('Por favor, digite um telefone válido com DDD');
           return false;
         }
         break;
-      case 4:
+      case 3:
         if (!validateEmail(formData.email)) {
           setError('Por favor, digite um e-mail válido');
           return false;
         }
         break;
-      case 5:
+      case 4:
         if (!formData.instagram.trim()) {
           setError('Por favor, digite seu Instagram');
           return false;
         }
         break;
-      case 6:
+      case 5:
         if (!formData.nicho.trim()) {
           setError('Por favor, digite seu nicho de atuação');
           return false;
         }
         break;
-      case 7:
+      case 6:
         if (!formData.cargo) {
           setError('Por favor, selecione seu cargo');
           return false;
         }
         break;
-      case 8:
+      case 7:
         if (!formData.faturamento) {
           setError('Por favor, selecione seu faturamento');
           return false;
         }
         break;
-      case 9:
+      case 8:
         if (!formData.dificuldade) {
           setError('Por favor, selecione uma opção');
           return false;
         }
         break;
-      case 10:
-        if (!formData.investimento) {
-          setError('Por favor, selecione uma opção');
-          return false;
-        }
-        break;
-      case 11:
+      case 9:
         if (!formData.meta_carreira?.trim()) {
           setError('Por favor, responda esta pergunta');
           return false;
         }
         break;
-      case 12:
+      case 10:
         if (!formData.dificuldades_objetivo?.trim()) {
           setError('Por favor, responda esta pergunta');
           return false;
         }
         break;
-      case 13:
+      case 11:
         if (!formData.por_que_escolhida?.trim()) {
           setError('Por favor, responda esta pergunta');
+          return false;
+        }
+        break;
+      case 12:
+        if (!formData.investimento) {
+          setError('Por favor, selecione uma opção');
           return false;
         }
         break;
