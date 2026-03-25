@@ -1,11 +1,16 @@
 
 
-## Alterar planilha do formulário /bio-julia-ottoni
+## Adicionar página de boas-vindas ao formulário /bio-julia-ottoni
 
-Trocar o `spreadsheetId` de `1oymvv7cBG4UX09BfDVqNajot0EVH5tUsOwHB2lM7iMA` para `1nJSREl7-zyCn4xEp_hkV8a1omp8mfFefZN0k5C5ilbE` em dois arquivos:
+### Mudança
 
-1. **`src/hooks/useFormPersistence.ts`** — Atualizar entrada `'bio-julia-ottoni'` no mapa `SPREADSHEET_IDS`.
-2. **`src/config/formConfigs.ts`** — Atualizar `spreadsheetId` na config `'bio-julia-ottoni'`.
+Adicionar um step 0 (página de boas-vindas) antes das perguntas atuais em `src/pages/BioJuliaOttoni.tsx`:
 
-Lembrete: a nova planilha precisa estar compartilhada com `agendamento@numeric-span-476817-b7.iam.gserviceaccount.com` (Editor) e ter a aba **"Base"**.
+1. **Novo step 0** — Exibe título "Mentoria de Posicionamento Julia Ottoni", os 4 parágrafos de descrição, e botão CTA "Começar"
+2. **Ajustar numeração** — O estado `step` inicia em `0` em vez de `1`. Todas as referências a steps (validação, navegação, agradecimento) incrementam em +1 (agradecimento passa de 13 para 14)
+3. **Sem botão "Voltar"** no step 0, sem progress bar
+4. **Layout** — Mesmo estilo visual do formulário, com a barra lateral colorida similar à página de agradecimento
+
+### Arquivos alterados
+- `src/pages/BioJuliaOttoni.tsx`
 
