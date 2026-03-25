@@ -98,61 +98,61 @@ const BioJuliaOttoni = () => {
           return false;
         }
         break;
-      case 3:
+      case 4:
         if (!validateEmail(formData.email)) {
           setError('Por favor, digite um e-mail válido');
           return false;
         }
         break;
-      case 4:
+      case 5:
         if (!formData.instagram.trim()) {
           setError('Por favor, digite seu Instagram');
           return false;
         }
         break;
-      case 5:
+      case 6:
         if (!formData.nicho.trim()) {
           setError('Por favor, digite seu nicho de atuação');
           return false;
         }
         break;
-      case 6:
+      case 7:
         if (!formData.cargo) {
           setError('Por favor, selecione seu cargo');
           return false;
         }
         break;
-      case 7:
+      case 8:
         if (!formData.faturamento) {
           setError('Por favor, selecione seu faturamento');
           return false;
         }
         break;
-      case 8:
+      case 9:
         if (!formData.dificuldade) {
           setError('Por favor, selecione uma opção');
           return false;
         }
         break;
-      case 9:
+      case 10:
         if (!formData.investimento) {
           setError('Por favor, selecione uma opção');
           return false;
         }
         break;
-      case 10:
+      case 11:
         if (!formData.meta_carreira?.trim()) {
           setError('Por favor, responda esta pergunta');
           return false;
         }
         break;
-      case 11:
+      case 12:
         if (!formData.dificuldades_objetivo?.trim()) {
           setError('Por favor, responda esta pergunta');
           return false;
         }
         break;
-      case 12:
+      case 13:
         if (!formData.por_que_escolhida?.trim()) {
           setError('Por favor, responda esta pergunta');
           return false;
@@ -172,7 +172,7 @@ const BioJuliaOttoni = () => {
       console.error('Error saving progress:', error);
     }
     
-    if (step < 12) {
+    if (step < 13) {
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -184,7 +184,7 @@ const BioJuliaOttoni = () => {
     setIsSubmitting(true);
     try {
       await completeForm(formData);
-      setStep(13);
+      setStep(14);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
       console.error('Error completing form:', error);
@@ -217,7 +217,51 @@ const BioJuliaOttoni = () => {
   };
 
   const renderStep = () => {
+    if (step === 0) {
+      return (
+        <div className="space-y-6 md:space-y-8">
+          <div className="flex gap-3 md:gap-4 items-start">
+            <div className="w-1 h-12 md:h-16 bg-primary rounded-full flex-shrink-0" />
+            <h1 className="text-2xl md:text-4xl font-bold text-foreground">Mentoria de Posicionamento Julia Ottoni</h1>
+          </div>
+          <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed">
+            <p>Julia Ottoni é especialista em branding pessoal, com foco em ajudar empresárias a transformarem posicionamento em resultado.</p>
+            <p>Criou um método próprio, baseado em arquétipos, que estrutura autoridade, imagem e conversão de forma estratégica.</p>
+            <p>Após escalar seu negócio para múltiplos 7 dígitos, hoje direciona empresárias a construírem marcas fortes, desejadas e lucrativas.</p>
+            <p>Este formulário é a primeira etapa para entendermos seu momento e avaliar sua entrada na mentoria.</p>
+          </div>
+          <button
+            onClick={() => { setStep(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="w-full px-6 md:px-8 py-3 md:py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition text-base md:text-lg"
+          >
+            Começar
+          </button>
+        </div>
+      );
+    }
+
     if (step === 1) {
+      return (
+        <div className="space-y-6">
+          <p className="text-sm md:text-lg text-muted-foreground">
+            Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil.
+          </p>
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Qual é o seu nome completo?</h2>
+            <input
+              type="text"
+              value={formData.nome}
+              onChange={(e) => updateField('nome', e.target.value)}
+              placeholder="Digite seu nome completo"
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground"
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (step === 2) {
       return (
         <div className="space-y-6">
           <p className="text-sm md:text-lg text-muted-foreground">
@@ -532,7 +576,7 @@ const BioJuliaOttoni = () => {
     }
 
     // Página de Agradecimento
-    if (step === 13) {
+    if (step === 14) {
       return (
         <div className="max-w-3xl mx-auto space-y-6 md:space-y-8">
           <div className="flex gap-3 md:gap-4 items-start">
@@ -595,7 +639,7 @@ const BioJuliaOttoni = () => {
             </div>
           )}
           
-          {step < 13 && (
+          {step > 0 && step < 14 && (
             <div className="flex justify-between items-center mt-8">
               {step > 1 ? (
                 <button
@@ -613,12 +657,12 @@ const BioJuliaOttoni = () => {
                 disabled={isSubmitting}
                 className="px-5 md:px-8 py-[15px] md:py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
               >
-                {step === 12 ? (isSubmitting ? 'Finalizando...' : 'Finalizar') : 'Continuar'}
+                {step === 13 ? (isSubmitting ? 'Finalizando...' : 'Finalizar') : 'Continuar'}
               </button>
             </div>
           )}
           
-          {isSaving && step < 13 && (
+          {isSaving && step > 0 && step < 14 && (
             <div className="mt-4 text-center">
               <p className="text-xs md:text-sm text-muted-foreground">
                 Salvando automaticamente...
