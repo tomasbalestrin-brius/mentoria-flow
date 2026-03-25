@@ -261,35 +261,14 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 2) {
-      return (
-        <div className="space-y-6">
-          <p className="text-sm md:text-lg text-muted-foreground">
-            Gostaríamos de saber um pouco mais sobre você para indicar o programa que melhor se encaixa ao seu perfil.
-          </p>
-          <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Qual é o seu nome completo?</h2>
-            <input
-              type="text"
-              value={formData.nome}
-              onChange={(e) => updateField('nome', e.target.value)}
-              placeholder="Digite seu nome completo"
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
-              autoFocus
-            />
-          </div>
-        </div>
-      );
-    }
-
-    if (step === 2) {
+    if (step === 3) {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">Qual é o seu telefone?</h2>
-            <p className="text-sm md:text-lg text-gray-300 mb-4">Inclua o DDD</p>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-2">Qual é o seu telefone?</h2>
+            <p className="text-sm md:text-lg text-muted-foreground mb-4">Inclua o DDD</p>
             <div className="flex gap-2">
-              <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
+              <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-foreground">
                 +55
               </div>
               <input
@@ -297,28 +276,10 @@ const BioJuliaOttoni = () => {
                 value={formData.telefone}
                 onChange={(e) => updateField('telefone', formatPhone(e.target.value))}
                 placeholder="(00) 00000-0000"
-                className="flex-1 px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+                className="flex-1 px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground"
                 autoFocus
               />
             </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (step === 3) {
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Qual é o seu e-mail?</h2>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => updateField('email', e.target.value)}
-              placeholder="seu@email.com"
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
-              autoFocus
-            />
           </div>
         </div>
       );
@@ -328,20 +289,15 @@ const BioJuliaOttoni = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Qual é o seu Instagram?</h2>
-            <div className="flex gap-2">
-              <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-white">
-                @
-              </div>
-              <input
-                type="text"
-                value={formData.instagram}
-                onChange={(e) => updateField('instagram', e.target.value.replace('@', ''))}
-                placeholder="seuinstagram"
-                className="flex-1 px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
-                autoFocus
-              />
-            </div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Qual é o seu e-mail?</h2>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => updateField('email', e.target.value)}
+              placeholder="seu@email.com"
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground"
+              autoFocus
+            />
           </div>
         </div>
       );
@@ -351,13 +307,36 @@ const BioJuliaOttoni = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Qual é o seu nicho de atuação?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Qual é o seu Instagram?</h2>
+            <div className="flex gap-2">
+              <div className="flex items-center px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg bg-form-input-bg border border-form-input-border text-foreground">
+                @
+              </div>
+              <input
+                type="text"
+                value={formData.instagram}
+                onChange={(e) => updateField('instagram', e.target.value.replace('@', ''))}
+                placeholder="seuinstagram"
+                className="flex-1 px-3 md:px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground"
+                autoFocus
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (step === 6) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Qual é o seu nicho de atuação?</h2>
             <input
               type="text"
               value={formData.nicho}
               onChange={(e) => updateField('nicho', e.target.value)}
               placeholder="Ex: Estética, Saúde, Educação..."
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground"
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground"
               autoFocus
             />
           </div>
@@ -365,12 +344,12 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 6) {
+    if (step === 7) {
       const cargos = ['Dono', 'Gerente', 'Autônomo', 'Colaborador', 'Vendedor'];
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual é o seu cargo na empresa?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-6">Qual é o seu cargo na empresa?</h2>
             <div className="space-y-3">
               {cargos.map((cargo) => (
                 <label
@@ -390,7 +369,7 @@ const BioJuliaOttoni = () => {
                     onChange={() => updateField('cargo', cargo)}
                     className="mr-3 h-4 w-4"
                   />
-                  <span className="text-white text-sm md:text-base">{cargo}</span>
+                  <span className="text-foreground text-sm md:text-base">{cargo}</span>
                 </label>
               ))}
             </div>
@@ -399,7 +378,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 7) {
+    if (step === 8) {
       const faturamentos = [
         'Ainda não fatura',
         '5-15k',
@@ -412,7 +391,7 @@ const BioJuliaOttoni = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual é o seu faturamento mensal?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-6">Qual é o seu faturamento mensal?</h2>
             <div className="space-y-3">
               {faturamentos.map((faturamento) => (
                 <label
@@ -432,7 +411,7 @@ const BioJuliaOttoni = () => {
                     onChange={() => updateField('faturamento', faturamento)}
                     className="mr-3 h-4 w-4"
                   />
-                  <span className="text-white text-sm md:text-base">{faturamento}</span>
+                  <span className="text-foreground text-sm md:text-base">{faturamento}</span>
                 </label>
               ))}
             </div>
@@ -441,7 +420,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 8) {
+    if (step === 9) {
       const dificuldades = [
         'Posicionamento',
         'Atração de Clientes',
@@ -453,7 +432,7 @@ const BioJuliaOttoni = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-6">Qual é a sua principal dificuldade hoje?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-6">Qual é a sua principal dificuldade hoje?</h2>
             <div className="space-y-3">
               {dificuldades.map((dificuldade) => (
                 <label
@@ -473,7 +452,7 @@ const BioJuliaOttoni = () => {
                     onChange={() => updateField('dificuldade', dificuldade)}
                     className="mr-3 h-4 w-4"
                   />
-                  <span className="text-white text-sm md:text-base">{dificuldade}</span>
+                  <span className="text-foreground text-sm md:text-base">{dificuldade}</span>
                 </label>
               ))}
             </div>
@@ -482,7 +461,7 @@ const BioJuliaOttoni = () => {
       );
     }
 
-    if (step === 9) {
+    if (step === 10) {
       const investimentos = [
         'Quero avaliar opções de parcelamento',
         'Ainda não estou decidido, quero mais Informações',
@@ -491,8 +470,8 @@ const BioJuliaOttoni = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-2">O investimento para participar dos nossos programas é de R$ 9.997,00 à R$ 100.000,00</h2>
-            <p className="text-[13px] md:text-lg text-gray-300 mb-6">Gostaria de seguir com o processo seletivo?</p>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-2">O investimento para participar dos nossos programas é de R$ 9.997,00 à R$ 100.000,00</h2>
+            <p className="text-[13px] md:text-lg text-muted-foreground mb-6">Gostaria de seguir com o processo seletivo?</p>
             <div className="space-y-3">
               {investimentos.map((investimento) => (
                 <label
@@ -512,28 +491,10 @@ const BioJuliaOttoni = () => {
                     onChange={() => updateField('investimento', investimento)}
                     className="mr-3 h-4 w-4"
                   />
-                  <span className="text-white text-sm md:text-base">{investimento}</span>
+                  <span className="text-foreground text-sm md:text-base">{investimento}</span>
                 </label>
               ))}
             </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (step === 10) {
-      return (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">O que você deseja alcançar com sua carreira e faturamento nos próximos 12 meses?</h2>
-            <textarea
-              value={formData.meta_carreira || ''}
-              onChange={(e) => updateField('meta_carreira', e.target.value)}
-              placeholder="Descreva seus objetivos..."
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground resize-none"
-              rows={5}
-              autoFocus
-            />
           </div>
         </div>
       );
@@ -543,12 +504,12 @@ const BioJuliaOttoni = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Quais dificuldades está enfrentando para alcançar esse objetivo?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">O que você deseja alcançar com sua carreira e faturamento nos próximos 12 meses?</h2>
             <textarea
-              value={formData.dificuldades_objetivo || ''}
-              onChange={(e) => updateField('dificuldades_objetivo', e.target.value)}
-              placeholder="Descreva suas dificuldades..."
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground resize-none"
+              value={formData.meta_carreira || ''}
+              onChange={(e) => updateField('meta_carreira', e.target.value)}
+              placeholder="Descreva seus objetivos..."
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
               rows={5}
               autoFocus
             />
@@ -561,12 +522,30 @@ const BioJuliaOttoni = () => {
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-white mb-4">Por que você acredita que deveria ser escolhida para uma consultoria individual com o time da Julia Ottoni?</h2>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Quais dificuldades está enfrentando para alcançar esse objetivo?</h2>
+            <textarea
+              value={formData.dificuldades_objetivo || ''}
+              onChange={(e) => updateField('dificuldades_objetivo', e.target.value)}
+              placeholder="Descreva suas dificuldades..."
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
+              rows={5}
+              autoFocus
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (step === 13) {
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-[16px] md:text-2xl font-semibold md:font-bold text-foreground mb-4">Por que você acredita que deveria ser escolhida para uma consultoria individual com o time da Julia Ottoni?</h2>
             <textarea
               value={formData.por_que_escolhida || ''}
               onChange={(e) => updateField('por_que_escolhida', e.target.value)}
               placeholder="Conte-nos o motivo..."
-              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-white placeholder:text-muted-foreground resize-none"
+              className="w-full px-4 py-3 md:py-4 text-base md:text-lg rounded-lg focus:ring-2 focus:ring-primary focus:outline-none bg-form-input-bg border border-form-input-border text-foreground placeholder:text-muted-foreground resize-none"
               rows={5}
               autoFocus
             />
