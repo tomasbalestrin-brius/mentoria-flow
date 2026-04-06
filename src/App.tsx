@@ -12,6 +12,7 @@ import FeedJuliaOttoni from "./pages/FeedJuliaOttoni";
 import TrafegoPostagens from "./pages/TrafegoPostagens";
 import BioJuliaOttoni from "./pages/BioJuliaOttoni";
 import Intensivo from "./pages/Intensivo";
+import ConteudosJulia from "./pages/ConteudosJulia";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
@@ -50,6 +51,9 @@ const App = () => (
           
           {/* Intensivo - Formulário duplicado do Bio */}
           <Route path="/intensivo" element={<Intensivo />} />
+          
+          {/* Conteúdos Julia - Formulário duplicado do Bio Julia Ottoni */}
+          <Route path="/conteudos-julia" element={<ConteudosJulia />} />
           
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />

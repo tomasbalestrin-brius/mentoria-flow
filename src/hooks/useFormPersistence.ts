@@ -28,7 +28,8 @@ const SPREADSHEET_IDS: Record<string, string> = {
   'feed-julia-ottoni': '10p8wQKI2gBKK8kwhQ2vqzQ_xIMcFpvOJQmwkUMbkMZw',
   'trafego-postagens': '1cuMG8qVGl2YB4eZXqfqDrIIlvqCiQYosmMoMTEEjRHI',
   'bio-julia-ottoni': '1nJSREl7-zyCn4xEp_hkV8a1omp8mfFefZN0k5C5ilbE',
-  'intensivo': '1LBhKreB3dIEeavbLINZzLS5GknYndhesKyzwW6Gw76o'
+  'intensivo': '1LBhKreB3dIEeavbLINZzLS5GknYndhesKyzwW6Gw76o',
+  'conteudos-julia': '1Ksl64qBOV2Ggx8ltp-QlI5UfTky7ea0Rexd__dZmf48'
 };
 
 const FINAL_STEP_BY_FORM_TYPE: Record<string, number> = {
@@ -41,6 +42,7 @@ const FINAL_STEP_BY_FORM_TYPE: Record<string, number> = {
   'feed-julia-ottoni': 11,
   'trafego-postagens': 11,
   'intensivo': 9,
+  'conteudos-julia': 12,
 };
 
 export const useFormPersistence = (formType: string = 'bio') => {
