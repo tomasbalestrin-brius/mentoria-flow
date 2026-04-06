@@ -145,5 +145,18 @@ export const formConfigs: Record<string, FormConfig> = {
     googleSheet: {
       spreadsheetId: '1LBhKreB3dIEeavbLINZzLS5GknYndhesKyzwW6Gw76o'
     }
+  },
+  'conteudos-julia': {
+    id: 'conteudos-julia',
+    title: 'Conteúdos Julia',
+    description: 'Aplicação para Mentoria - Conteúdos Julia',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '1Ksl64qBOV2Ggx8ltp-QlI5UfTky7ea0Rexd__dZmf48'
+    }
   }
 };

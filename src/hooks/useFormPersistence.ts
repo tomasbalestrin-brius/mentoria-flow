@@ -42,6 +42,7 @@ const FINAL_STEP_BY_FORM_TYPE: Record<string, number> = {
   'feed-julia-ottoni': 11,
   'trafego-postagens': 11,
   'intensivo': 9,
+  'conteudos-julia': 12,
 };
 
 export const useFormPersistence = (formType: string = 'bio') => {
