@@ -12,6 +12,7 @@ import FeedJuliaOttoni from "./pages/FeedJuliaOttoni";
 import TrafegoPostagens from "./pages/TrafegoPostagens";
 import BioJuliaOttoni from "./pages/BioJuliaOttoni";
 import Intensivo from "./pages/Intensivo";
+import ConteudosJulia from "./pages/ConteudosJulia";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
