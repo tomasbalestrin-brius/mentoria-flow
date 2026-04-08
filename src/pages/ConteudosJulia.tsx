@@ -210,29 +210,6 @@ const ConteudosJulia = () => {
   };
 
   const renderStep = () => {
-    if (step === 0) {
-      return (
-        <div className="space-y-6 md:space-y-8">
-          <div className="flex gap-3 md:gap-4 items-start">
-            <div className="w-1 h-12 md:h-16 bg-primary rounded-full flex-shrink-0" />
-            <h1 className="text-2xl md:text-4xl font-bold text-foreground">Mentoria de Posicionamento Julia Ottoni</h1>
-          </div>
-          <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed">
-            <p>Julia Ottoni é especialista em branding pessoal, com foco em ajudar empresárias a transformarem posicionamento em resultado.</p>
-            <p>Criou um método próprio, baseado em arquétipos, que estrutura autoridade, imagem e conversão de forma estratégica.</p>
-            <p>Após escalar seu negócio para múltiplos 7 dígitos, hoje direciona empresárias a construírem marcas fortes, desejadas e lucrativas.</p>
-            <p>Este formulário é a primeira etapa para entendermos seu momento e avaliar sua entrada na mentoria.</p>
-          </div>
-          <button
-            onClick={() => { setStep(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="w-full px-6 md:px-8 py-3 md:py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition text-base md:text-lg"
-          >
-            Começar
-          </button>
-        </div>
-      );
-    }
-
     if (step === 1) {
       return (
         <div className="space-y-6">
