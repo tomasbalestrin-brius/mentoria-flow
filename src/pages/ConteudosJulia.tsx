@@ -4,7 +4,7 @@ import { useFormPersistence, FormData } from '@/hooks/useFormPersistence';
 import { toast } from 'sonner';
 
 const ConteudosJulia = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     nome: '',
     telefone: '',
