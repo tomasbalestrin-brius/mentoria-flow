@@ -1,40 +1,16 @@
 
 
-## Ajustes no formulário /bio-julia-ottoni
+## Remover página de boas-vindas do /conteudos-julia
 
-### Problemas identificados
-1. **Pergunta vazia no step 2** — O `renderStep()` tem step 1 (nome) e step 3 (telefone), mas não tem conteúdo para step 2, resultando em página em branco.
-2. **Frase introdutória** no step 1 ("Gostaríamos de saber um pouco mais...") — deve ser removida.
-3. **Pergunta de investimento** (step 10) — deve ir para o final, após "por que deveria ser escolhida".
+### O que muda
+Remover o Step 0 (página de boas-vindas com título "Mentoria de Posicionamento Julia Ottoni") e fazer o formulário começar direto na pergunta do nome.
 
-### Nova ordem dos steps
+### Alterações em `src/pages/ConteudosJulia.tsx`
+1. **Estado inicial**: `step` começa em `1` em vez de `0`
+2. **Remover bloco do step 0** (linhas 215-236): Deletar todo o `if (step === 0)` que renderiza a página de boas-vindas
+3. **Remover case 0 do validateStep** (linhas 81-82)
+4. **Ajustar handleBack**: Manter `step > 1` (já está correto)
+5. **Progress bar e botão Voltar**: Garantir que apareçam desde o step 1 (já devem funcionar sem mudanças)
 
-| Step | Conteúdo |
-|------|----------|
-| 0 | Boas-vindas (inalterado) |
-| 1 | Nome (sem frase intro) |
-| 2 | Telefone |
-| 3 | E-mail |
-| 4 | Instagram |
-| 5 | Nicho |
-| 6 | Cargo |
-| 7 | Faturamento |
-| 8 | Dificuldade |
-| 9 | Meta carreira |
-| 10 | Dificuldades objetivo |
-| 11 | Por que escolhida |
-| 12 | Investimento |
-| 13 | Agradecimento |
-
-### Alterações em `src/pages/BioJuliaOttoni.tsx`
-- Remover frase "Gostaríamos de saber..." do step do nome
-- Renumerar todos os steps de 1 a 12 (removendo o gap vazio e movendo investimento para o final)
-- Atualizar `validateStep` com a nova numeração
-- Atualizar `handleNext` → submissão no step 12, agradecimento = step 13
-- Atualizar `handleSubmit` → `setStep(13)`
-- Atualizar referência ao smartplayer script → `step === 13`
-- Botão "Finalizar" → `step === 12`
-
-### Alterações em `src/hooks/useFormPersistence.ts`
-- Atualizar `FINAL_STEP_BY_FORM_TYPE['bio-julia-ottoni']` de 12 para 12 (já está correto, mas validar)
+Nenhuma renumeração necessária — os steps 1-13 permanecem iguais, apenas o step 0 é removido.
 
