@@ -78,8 +78,6 @@ const ConteudosJulia = () => {
     setError('');
     
     switch (step) {
-      case 0:
-        return true;
       case 1:
         if (!formData.nome.trim() || formData.nome.trim().length < 3) {
           setError('Por favor, digite seu nome completo (mínimo 3 caracteres)');
