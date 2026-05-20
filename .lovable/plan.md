@@ -1,16 +1,18 @@
+## Recuperar respostas do /conteudos-julia
 
+Há 99 registros salvos no banco de dados. Vou recuperar apenas os **completos** (status = 'Completo') de duas formas:
 
-## Remover página de boas-vindas do /conteudos-julia
+### 1. Gerar planilha Excel (.xlsx)
+- Consultar todos os registros completos de `aplicacoes_mentoria` onde `tipo_formulario = 'conteudos-julia'`
+- Gerar arquivo `/mnt/documents/leads-conteudos-julia.xlsx` com as 17 colunas padrão (Timestamp, Nome, Telefone, Email, Instagram, Nicho, Cargo, Faturamento, Dificuldade, Investimento, Data, Horário, Status, Última Pergunta, Meta Carreira, Dificuldades Objetivo, Por que escolhida)
+- Disponibilizar para download via `<presentation-artifact>`
 
-### O que muda
-Remover o Step 0 (página de boas-vindas com título "Mentoria de Posicionamento Julia Ottoni") e fazer o formulário começar direto na pergunta do nome.
+### 2. Reenviar para o Google Sheets
+- Chamar a edge function `sheets-sync` uma vez por lead, sem `rowId`, para fazer append no spreadsheet `1Ksl64qBOV2Ggx8ltp-QlI5UfTky7ea0Rexd__dZmf48`
+- Cada lead vira uma nova linha começando na coluna A (graças à correção anterior)
+- Status marcado como "Completo"
 
-### Alterações em `src/pages/ConteudosJulia.tsx`
-1. **Estado inicial**: `step` começa em `1` em vez de `0`
-2. **Remover bloco do step 0** (linhas 215-236): Deletar todo o `if (step === 0)` que renderiza a página de boas-vindas
-3. **Remover case 0 do validateStep** (linhas 81-82)
-4. **Ajustar handleBack**: Manter `step > 1` (já está correto)
-5. **Progress bar e botão Voltar**: Garantir que apareçam desde o step 1 (já devem funcionar sem mudanças)
-
-Nenhuma renumeração necessária — os steps 1-13 permanecem iguais, apenas o step 0 é removido.
-
+### Observações
+- Nenhuma alteração no código do projeto — é apenas recuperação de dados
+- Os leads vão ser adicionados **abaixo** dos que já existem na planilha (não duplica os atuais)
+- Se quiser limpar a planilha antes (manter só cabeçalho na linha 1), me avisa antes de eu rodar
