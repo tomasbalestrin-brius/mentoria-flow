@@ -77,9 +77,10 @@ serve(async (req) => {
     const lastCol = String.fromCharCode(64 + values.length); // 14→N, 17→Q
     
     // Atualizar ou adicionar no Google Sheets
+    // Para append, usamos A:A para forçar a detecção da tabela ancorada na coluna A
     const sheetsUrl = rowId 
       ? `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A${rowId}:${lastCol}${rowId}?valueInputOption=USER_ENTERED`
-      : `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A:${lastCol}:append?valueInputOption=USER_ENTERED`;
+      : `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A:A:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
 
     const method = rowId ? 'PUT' : 'POST';
     
