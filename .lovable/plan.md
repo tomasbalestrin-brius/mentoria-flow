@@ -1,18 +1,43 @@
-## Recuperar respostas do /conteudos-julia
+# Duplicar formulário raiz → /bio-ig-kennedy
 
-Há 99 registros salvos no banco de dados. Vou recuperar apenas os **completos** (status = 'Completo') de duas formas:
+Criar uma nova instância do formulário da rota `/` (Index.tsx) na rota `/bio-ig-kennedy`, com nome de mentor **Kennedy Rodrigues** e conectada à planilha `1XEe0dvumIW_3-Uw74qn8piIUD6mVZBFQ2W_03_MmWNY`, já aplicando todas as correções dos últimos bugs.
 
-### 1. Gerar planilha Excel (.xlsx)
-- Consultar todos os registros completos de `aplicacoes_mentoria` onde `tipo_formulario = 'conteudos-julia'`
-- Gerar arquivo `/mnt/documents/leads-conteudos-julia.xlsx` com as 17 colunas padrão (Timestamp, Nome, Telefone, Email, Instagram, Nicho, Cargo, Faturamento, Dificuldade, Investimento, Data, Horário, Status, Última Pergunta, Meta Carreira, Dificuldades Objetivo, Por que escolhida)
-- Disponibilizar para download via `<presentation-artifact>`
+## O que será feito
 
-### 2. Reenviar para o Google Sheets
-- Chamar a edge function `sheets-sync` uma vez por lead, sem `rowId`, para fazer append no spreadsheet `1Ksl64qBOV2Ggx8ltp-QlI5UfTky7ea0Rexd__dZmf48`
-- Cada lead vira uma nova linha começando na coluna A (graças à correção anterior)
-- Status marcado como "Completo"
+1. **Nova página `src/pages/BioIgKennedy.tsx`**
+   - Cópia 1:1 de `Index.tsx` (mesmas 9 perguntas + página de agradecimento)
+   - Usa `useFormPersistence('bio-ig-kennedy')` para isolar dados e localStorage
+   - `<FormHeader mentorName="Kennedy Rodrigues" />`
+   - CTA da thank-you page → `https://betheleducacao.com.br/`
 
-### Observações
-- Nenhuma alteração no código do projeto — é apenas recuperação de dados
-- Os leads vão ser adicionados **abaixo** dos que já existem na planilha (não duplica os atuais)
-- Se quiser limpar a planilha antes (manter só cabeçalho na linha 1), me avisa antes de eu rodar
+2. **Rota em `src/App.tsx`**
+   - Adicionar `<Route path="/bio-ig-kennedy" element={<BioIgKennedy />} />` antes do catch-all
+
+3. **Configuração em `src/config/formConfigs.ts`**
+   - Nova entrada `'bio-ig-kennedy'` com `spreadsheetId: '1XEe0dvumIW_3-Uw74qn8piIUD6mVZBFQ2W_03_MmWNY'`
+
+4. **Hook `src/hooks/useFormPersistence.ts`**
+   - Adicionar `'bio-ig-kennedy'` em `SPREADSHEET_IDS`
+   - Adicionar `'bio-ig-kennedy': 10` em `FINAL_STEP_BY_FORM_TYPE` (mesmo fluxo da rota raiz, que finaliza no step 10)
+
+5. **Lista admin `src/pages/FormList.tsx`**
+   - Adicionar o novo formulário com link e ID da planilha
+
+## Correções já aplicadas que serão respeitadas
+
+- **Cada lead = 1 linha só** (não múltiplas linhas por etapa): o hook já garante via `recordId` + `sheetRowId` isolados por `formType` no localStorage
+- **Append ancorado na coluna A** (sem desorganizar): edge function `sheets-sync` já usa `A:A:append` corrigido
+- **Segundas-feiras 09:30–11:00 bloqueadas** no agendamento (regra global já aplicada)
+- **Sem link do Google Meet** no evento do Calendar (já corrigido)
+- **LocalStorage isolado** por `formType` para não misturar com outros formulários
+
+## Teste pós-deploy
+
+Após implementar, vou:
+1. Compartilhar a planilha com a service account (se ainda não estiver)
+2. Disparar um lead de teste via edge function `sheets-sync` direto na planilha nova para confirmar que a linha aparece corretamente na aba `Base`, todas as 17 colunas alinhadas
+3. Confirmar o resultado pra você
+
+## Observação importante
+
+A planilha `1XEe0dvumIW...` precisa estar **compartilhada com a service account** (o e-mail `client_email` do `GOOGLE_SERVICE_ACCOUNT_KEY`) com permissão de **Editor**, senão o sync falha com erro de permissão. Se o teste falhar, vou avisar exatamente qual e-mail compartilhar.
