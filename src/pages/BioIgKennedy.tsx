@@ -506,14 +506,6 @@ const BioIgKennedy = () => {
             </div>
           </div>
 
-          {/* Vídeo Smartplayer */}
-          <div 
-            ref={videoContainerRef}
-            className="bg-secondary/30 border border-border rounded-lg overflow-hidden p-2"
-            dangerouslySetInnerHTML={{
-              __html: '<vturb-smartplayer id="vid-692066657cc713fc76f626ec" style="display: block; margin: 0 auto; width: 100%;"></vturb-smartplayer>'
-            }}
-          />
 
           {/* Botão CTA */}
           <div className="text-center pt-2 md:pt-4">
