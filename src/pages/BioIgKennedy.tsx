@@ -3,7 +3,7 @@ import { FormHeader } from '@/components/FormHeader';
 import { useFormPersistence, FormData } from '@/hooks/useFormPersistence';
 import { toast } from 'sonner';
 
-const Index = () => {
+const BioIgKennedy = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     nome: '',
@@ -23,7 +23,7 @@ const Index = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const videoContainerRef = useRef<HTMLDivElement>(null);
   
-  const { saveProgress, completeForm, isSaving } = useFormPersistence();
+  const { saveProgress, completeForm, isSaving } = useFormPersistence('bio-ig-kennedy');
 
   // Auto-save com debounce
   useEffect(() => {
@@ -531,7 +531,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <FormHeader />
+      <FormHeader mentorName="Kennedy Rodrigues" />
       
       <div className="w-full flex items-center justify-center px-5 md:px-4 pb-12 min-h-[calc(100vh-200px)]">
         <div className="w-full max-w-[90%] md:max-w-xl">
@@ -581,4 +581,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default BioIgKennedy;
