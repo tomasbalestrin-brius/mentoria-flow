@@ -29,7 +29,8 @@ const SPREADSHEET_IDS: Record<string, string> = {
   'trafego-postagens': '1cuMG8qVGl2YB4eZXqfqDrIIlvqCiQYosmMoMTEEjRHI',
   'bio-julia-ottoni': '1nJSREl7-zyCn4xEp_hkV8a1omp8mfFefZN0k5C5ilbE',
   'intensivo': '1LBhKreB3dIEeavbLINZzLS5GknYndhesKyzwW6Gw76o',
-  'conteudos-julia': '1Ksl64qBOV2Ggx8ltp-QlI5UfTky7ea0Rexd__dZmf48'
+  'conteudos-julia': '1Ksl64qBOV2Ggx8ltp-QlI5UfTky7ea0Rexd__dZmf48',
+  'bio-ig-kennedy': '1XEe0dvumIW_3-Uw74qn8piIUD6mVZBFQ2W_03_MmWNY'
 };
 
 const FINAL_STEP_BY_FORM_TYPE: Record<string, number> = {
@@ -43,6 +44,7 @@ const FINAL_STEP_BY_FORM_TYPE: Record<string, number> = {
   'trafego-postagens': 11,
   'intensivo': 9,
   'conteudos-julia': 12,
+  'bio-ig-kennedy': 9,
 };
 
 export const useFormPersistence = (formType: string = 'bio') => {

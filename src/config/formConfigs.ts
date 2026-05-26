@@ -158,5 +158,18 @@ export const formConfigs: Record<string, FormConfig> = {
     googleSheet: {
       spreadsheetId: '1Ksl64qBOV2Ggx8ltp-QlI5UfTky7ea0Rexd__dZmf48'
     }
+  },
+  'bio-ig-kennedy': {
+    id: 'bio-ig-kennedy',
+    title: 'Bio IG Kennedy',
+    description: 'Aplicação para Mentoria - Kennedy Rodrigues',
+    steps: [],
+    scheduling: {
+      enabled: true,
+      availableTimes: []
+    },
+    googleSheet: {
+      spreadsheetId: '1XEe0dvumIW_3-Uw74qn8piIUD6mVZBFQ2W_03_MmWNY'
+    }
   }
 };

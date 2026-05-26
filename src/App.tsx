@@ -13,6 +13,7 @@ import TrafegoPostagens from "./pages/TrafegoPostagens";
 import BioJuliaOttoni from "./pages/BioJuliaOttoni";
 import Intensivo from "./pages/Intensivo";
 import ConteudosJulia from "./pages/ConteudosJulia";
+import BioIgKennedy from "./pages/BioIgKennedy";
 import FormList from "./pages/FormList";
 import NotFound from "./pages/NotFound";
 
@@ -54,6 +55,9 @@ const App = () => (
           
           {/* Conteúdos Julia - Formulário duplicado do Bio Julia Ottoni */}
           <Route path="/conteudos-julia" element={<ConteudosJulia />} />
+          
+          {/* Bio IG Kennedy - Formulário duplicado da rota raiz, mentor Kennedy Rodrigues */}
+          <Route path="/bio-ig-kennedy" element={<BioIgKennedy />} />
           
           {/* Lista de formulários - APENAS via link direto */}
           <Route path="/all-forms-bethel" element={<FormList />} />
